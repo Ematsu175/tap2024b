@@ -24,7 +24,7 @@ public class HelloApplication extends Application {
     public void CrearUI(){
         mitCalculadora = new MenuItem("Calculadora");
         mitCalculadora.setOnAction(event -> new Calculadora());
-        menCompetencia1 = new Menu("Competencia 1");
+        menCompetencia1 = new Menu("Competencia1 Parcial 1");
         menCompetencia1.getItems().addAll(mitCalculadora);
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdpPrincipal = new BorderPane();
@@ -32,11 +32,10 @@ public class HelloApplication extends Application {
     }
     @Override
     public void start(Stage stage) throws IOException {
-        //FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         CrearUI();
         Scene scene = new Scene(bdpPrincipal, 320, 240);
         scene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
-        stage.setTitle("TAP2024 V2");
+        stage.setTitle("TAP2024B");
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
