@@ -1,3 +1,6 @@
 .root{
-    -fx-background-color: "#FF0000"
+    /*-fx-background-color: "#FF0000"*/
+    -fx-background-image: url("../images/wallpaper_tap2024.jpg");
+    -fx-background-size: 100%, 200px;
+    -fx-background-position: center;
 }
