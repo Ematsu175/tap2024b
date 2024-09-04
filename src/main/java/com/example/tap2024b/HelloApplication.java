@@ -21,10 +21,11 @@ public class HelloApplication extends Application {
     private Menu menCompetencia1, menCompetencia2, menSalir;
     private MenuItem mitCalculadora;
 
+
     public void CrearUI(){
         mitCalculadora = new MenuItem("Calculadora");
         mitCalculadora.setOnAction(event -> new Calculadora());
-        menCompetencia1 = new Menu("Competencia1 Parcial 1");
+        menCompetencia1 = new Menu("Competencia1");
         menCompetencia1.getItems().addAll(mitCalculadora);
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdpPrincipal = new BorderPane();

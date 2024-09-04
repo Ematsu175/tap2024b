@@ -16,6 +16,7 @@ public class Calculadora extends Stage {
     private VBox vbox;
     private Scene escena;
     private String[] strTeclas = {"7","8","9","*","4","5","6","/","1","2","3","+","0",".","=","-"};
+    private Button btnClear;
     private void CrearUI(){
         arrBtns =  new Button[4][4];
         txtPantalla = new TextField("0");
@@ -23,7 +24,9 @@ public class Calculadora extends Stage {
         txtPantalla.setEditable(false);
         gdpTeclado = new GridPane();
         CrearTeclado();
-        vbox = new VBox(txtPantalla, gdpTeclado);
+        btnClear = new Button("CE");
+        btnClear.setId("font-button");
+        vbox = new VBox(txtPantalla, gdpTeclado, btnClear);
         escena = new Scene(vbox,300, 300);
     }
 
@@ -46,10 +49,23 @@ public class Calculadora extends Stage {
         CrearUI();
         this.setTitle("Calculadora");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/calculadora.css").toExternalForm());
         this.show();
     }
 
     private void DetectarTecla(String tecla) {
+
         txtPantalla.appendText(tecla);
+        String numero1="", numero2="";
+        String operador="";
+        if (txtPantalla.getText()!="+" || txtPantalla.getText()!="-" || txtPantalla.getText()!="*" ||
+                txtPantalla.getText()!="/" || txtPantalla.getText()!="."){
+            numero1=txtPantalla.getText();
+            System.out.println("El numero es: "+numero1);
+        } else {
+            operador = txtPantalla.getText();
+            System.out.println("el operador es: "+operador);
+        }
+
     }
 }
