@@ -1,6 +1,7 @@
 package com.example.tap2024b;
 
 import com.example.tap2024b.vistas.Calculadora;
+import com.example.tap2024b.vistas.Loteria;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,14 +20,20 @@ public class HelloApplication extends Application {
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2, menSalir;
-    private MenuItem mitCalculadora;
+    private MenuItem mitCalculadora, mitLoteria;
 
 
     public void CrearUI(){
         mitCalculadora = new MenuItem("Calculadora");
         mitCalculadora.setOnAction(event -> new Calculadora());
+
+        mitLoteria = new MenuItem("Loteria");
+        mitLoteria.setOnAction(event -> new Loteria());
+
         menCompetencia1 = new Menu("Competencia1");
-        menCompetencia1.getItems().addAll(mitCalculadora);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria);
+        //menCompetencia1.getItems().addAll(mitLoteria);
+
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdpPrincipal = new BorderPane();
         bdpPrincipal.setTop(mnbPrincipal);
