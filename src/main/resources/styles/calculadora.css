@@ -1,13 +1,23 @@
-.button{
-    -fx-background-color: #4a7cc9;
-    -fx-background-radius:20;
-    -fx-text-fill: withe;
-    -fx-border-color: black;
-    -fx-border-radius:20;
-    -fx-padding: 3 6 6 60;
+#color-operador{
+    -fx-text-fill: black;
+    -fx-background-color: linear-gradient(rgb(255,255,255), rgb(255,0,0));
+    -fx-border-color: black;           /* Color del borde */
+    -fx-border-width: 2px;             /* Grosor del borde */
+    -fx-border-radius: 10px;           /* Radio de redondeo del borde */
 }
 
-#font-button{
-    -fx-font: bold italic 20pt "Arial";
-    -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);
+#color-numeros{
+    -fx-text-fill: black;
+    -fx-background-color: linear-gradient(rgb(255,255,255), rgb(0,0,255));
+    -fx-border-color: black;           /* Color del borde */
+    -fx-border-width: 2px;             /* Grosor del borde */
+    -fx-border-radius: 10px;           /* Radio de redondeo del borde */
+}
+
+#color-btnclear{
+    -fx-text-fill: black;
+    -fx-background-color: linear-gradient(rgb(255,255,255), rgb(255,0,0));
+    -fx-border-color: black;           /* Color del borde */
+    -fx-border-width: 2px;             /* Grosor del borde */
+    -fx-border-radius: 10px;           /* Radio de redondeo del borde */
 }
