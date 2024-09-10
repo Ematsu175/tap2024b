@@ -1,5 +1,6 @@
 package com.example.tap2024b.vistas;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,9 +36,24 @@ public class Loteria extends Stage {
         hBoxButtons = new HBox(btnAnterior, btnSiguiente);
         vbxTablilla = new VBox(gdpTablilla, hBoxButtons);
 
-        hBoxMain = new HBox(vbxTablilla);
-        escena = new Scene(hBoxMain, 400,400);
+        CrearMazo();
 
+        hBoxMain = new HBox(vbxTablilla, vbxMazo);
+        hBoxMain.setSpacing(20);
+        hBoxMain.setPadding(new Insets(20));
+        escena = new Scene(hBoxMain, 900,650);
+
+    }
+
+    private void CrearMazo() {
+        Image imgMazo = new Image(getClass().getResource("/images/dorso.jpeg").toString());
+        lblTimer = new Label("00:00");
+        imvMazo = new ImageView(imgMazo);
+        imvMazo.setFitHeight(300);
+        imvMazo.setFitWidth(200);
+        btnIniciar = new Button("Iniciar Juego");
+        vbxMazo = new VBox(lblTimer, imvMazo,btnIniciar);
+        vbxMazo.setSpacing(20);
     }
 
     private void CrearTablilla() {
@@ -48,8 +64,8 @@ public class Loteria extends Stage {
             for (int j = 0; j < 3; j++) {
                 img = new Image(getClass().getResource("/images/barril.jpeg").toString());
                 imv = new ImageView(img);
-                imv.setFitWidth(150);
-                imv.setFitHeight(100);
+                imv.setFitWidth(100);
+                imv.setFitHeight(125);
                 arrBtnTab[j][i] = new Button();
                 arrBtnTab[j][i].setGraphic(imv);
                 gdpTablilla.add(arrBtnTab[j][i],j,i);
