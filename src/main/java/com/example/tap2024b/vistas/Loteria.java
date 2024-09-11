@@ -10,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 public class Loteria extends Stage {
     private HBox hBoxMain, hBoxButtons;
@@ -21,6 +23,7 @@ public class Loteria extends Stage {
     private Scene escena;
     private String[] arrImg={"barril.jpeg","botella.jpeg","catrin.jpeg","chavorruco.jpeg","dorso.jpeg","luchador.jpeg","maceta.jpeg","rosa.jpeg","tacos.jpeg","venado.jpeg"};
     private Button[][] arrBtnTab;
+    private Panel pnlPrincipal;
     public Loteria(){
         CrearUI();
         this.setTitle("Loteria Mexicana");
@@ -39,10 +42,13 @@ public class Loteria extends Stage {
         CrearMazo();
 
         hBoxMain = new HBox(vbxTablilla, vbxMazo);
+        pnlPrincipal = new Panel("Loteria Mexicana");
+        pnlPrincipal.getStyleClass().add("panel-primary");
+        pnlPrincipal.setBody(hBoxMain);
         hBoxMain.setSpacing(20);
         hBoxMain.setPadding(new Insets(20));
-        escena = new Scene(hBoxMain, 900,650);
-
+        escena = new Scene(pnlPrincipal, 900,650);
+        escena.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
     }
 
     private void CrearMazo() {
@@ -52,6 +58,7 @@ public class Loteria extends Stage {
         imvMazo.setFitHeight(300);
         imvMazo.setFitWidth(200);
         btnIniciar = new Button("Iniciar Juego");
+        //btnIniciar.getStyleClass().setAll("btn-sm","bnt-danger");
         vbxMazo = new VBox(lblTimer, imvMazo,btnIniciar);
         vbxMazo.setSpacing(20);
     }
