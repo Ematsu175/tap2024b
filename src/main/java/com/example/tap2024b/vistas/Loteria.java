@@ -117,15 +117,14 @@ public class Loteria extends Stage {
         arrBtnTab = new Button[4][4];
         Image img;
         ImageView imv;
-        String[] arrImg = conjuntosDeImagenes[indiceConjunto];  // Cargar el conjunto seleccionado
+        String[] arrImg = conjuntosDeImagenes[indiceConjunto];
         int imageIndex = 0;
 
-        gdpTablilla.getChildren().clear();  // Limpiar las imágenes anteriores
+        gdpTablilla.getChildren().clear();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 3; j++) {
                 if (imageIndex < arrImg.length) {
-                    // Cargar la imagen correspondiente del arreglo
                     img = new Image(getClass().getResource("/images/loteria/" + arrImg[imageIndex]).toString());
                     imv = new ImageView(img);
                     imv.setFitWidth(100);
@@ -134,14 +133,12 @@ public class Loteria extends Stage {
                     arrBtnTab[j][i] = new Button();
                     arrBtnTab[j][i].setGraphic(imv);
 
-                    arrBtnTab[j][i].setUserData(arrImg[imageIndex]); // Almacenar el nombre de la imagen en UserData
-                    // Agregar manejador de eventos al botón
+                    arrBtnTab[j][i].setUserData(arrImg[imageIndex]);
                     arrBtnTab[j][i].setOnAction(event -> manejarClicBoton(event));
 
                     gdpTablilla.add(arrBtnTab[j][i], j, i);
-                    imageIndex++;  // Avanzar al siguiente índice de imagen
+                    imageIndex++;
                 } else {
-                    // Si no hay más imágenes, asegúrate de inicializar el botón como nulo
                     arrBtnTab[j][i] = null;
                 }
             }
@@ -149,23 +146,21 @@ public class Loteria extends Stage {
     }
 
     public void siguienteTablilla() {
-        // Si estamos en el último índice, volver al primero
         if (indiceActual == conjuntosDeImagenes.length - 1) {
-            indiceActual = 0;  // Volver al primer índice
+            indiceActual = 0;
         } else {
-            indiceActual++;  // Avanzar al siguiente índice
+            indiceActual++;
         }
-        CrearTablilla(indiceActual);  // Cargar la tablilla correspondiente
+        CrearTablilla(indiceActual);
     }
 
     public void anteriorTablilla() {
-        // Si estamos en el primer índice, ir al último
         if (indiceActual == 0) {
-            indiceActual = conjuntosDeImagenes.length - 1;  // Ir al último índice
+            indiceActual = conjuntosDeImagenes.length - 1;
         } else {
-            indiceActual--;  // Retroceder al índice anterior
+            indiceActual--;
         }
-        CrearTablilla(indiceActual);  // Cargar la tablilla correspondiente
+        CrearTablilla(indiceActual);
     }
 
     private void iniciarTemporizador() {
@@ -184,7 +179,7 @@ public class Loteria extends Stage {
                 if (indiceImagenActual < imagenesMazo.length) {
                     String nuevaImagen = imagenesMazo[indiceImagenActual];
                     Image imgNueva = new Image(getClass().getResource("/images/loteria/" + nuevaImagen).toString());
-                    imvMazo.setImage(imgNueva); // Actualizar la imagen mostrada
+                    imvMazo.setImage(imgNueva);
 
                     // Verificar condiciones de pérdida
                     if (nuevaImagen.equals("alacran.jpg") && indiceImagenActual > 0) {
@@ -192,17 +187,15 @@ public class Loteria extends Stage {
                     }
                     if (nuevaImagen.equals("venado.jpg") && tiempoRestante[0] == 0) {
                         if (!todosBotonesDeshabilitados()) {
-                            mostrarMensajePerdida(); // Mostrar mensaje de pérdida
+                            mostrarMensajePerdida();
                         }
                     }
 
-                    // Incrementar el índice
                     indiceImagenActual++;
                 } else {
                     // Si hemos mostrado todas las imágenes
                     if (indiceImagenActual == imagenesMazo.length) {
-                        //mostrarAlerta("Se han mostrado todas las cartas."); // Alerta informativa
-                        timeline.stop(); // Detener el temporizador
+                        timeline.stop();
                         mostrarMensajePerdida();
                     }
                 }
@@ -212,8 +205,8 @@ public class Loteria extends Stage {
             lblTimer.setText(String.format("%02d:%02d", tiempoRestante[0] / 60, tiempoRestante[0] % 60));
         }));
 
-        timeline.setCycleCount(Timeline.INDEFINITE); // Repetir indefinidamente
-        timeline.play(); // Iniciar el temporizador
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
 
@@ -224,23 +217,23 @@ public class Loteria extends Stage {
     }
 
     private void deshabilitarBotones() {
-        btnAnterior.setDisable(true); // Deshabilitar botón anterior
-        btnSiguiente.setDisable(true); // Deshabilitar botón siguiente
-        btnIniciar.setDisable(true); // Deshabilitar botón iniciar
+        btnAnterior.setDisable(true);
+        btnSiguiente.setDisable(true);
+        btnIniciar.setDisable(true);
     }
 
     private void manejarClicBoton(ActionEvent event) {
         Button botonPresionado = (Button) event.getSource();
-        String cartaActual = obtenerImagenActual(); // Obtener el nombre de la carta mostrada en el mazo
+        String cartaActual = obtenerImagenActual();
 
         // Verificar si hay coincidencia
         if (botonPresionado.getUserData().equals(cartaActual)) {
-            botonPresionado.setDisable(true); // Deshabilitar el botón si hay coincidencia
+            botonPresionado.setDisable(true);
 
             // Verificar si todos los botones están deshabilitados
             if (todosBotonesDeshabilitados()) {
-                detenerTemporizador(); // Detener el temporizador
-                mostrarMensajeVictoria(); // Mostrar mensaje de victoria
+                detenerTemporizador();
+                mostrarMensajeVictoria();
             }
         }
     }
@@ -254,16 +247,15 @@ public class Loteria extends Stage {
         for (Button[] fila : arrBtnTab) {
             for (Button boton : fila) {
                 if (boton != null && !boton.isDisabled()) {
-                    return false; // Al menos un botón está habilitado
+                    return false;
                 }
             }
         }
-        return true; // Todos los botones están deshabilitados
+        return true;
     }
 
     private void detenerTemporizador() {
-        temporizadorActivo = false; // Cambiar el estado del temporizador
-        // Aquí puedes añadir lógica adicional para detener la animación del temporizador si es necesario
+        temporizadorActivo = false;
     }
 
     private void mostrarMensajeVictoria() {
@@ -283,9 +275,6 @@ public class Loteria extends Stage {
             alert.showAndWait();
         });
     }
-
-
-
 
 
 }
