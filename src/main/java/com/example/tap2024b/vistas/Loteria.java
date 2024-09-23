@@ -47,9 +47,9 @@ public class Loteria extends Stage {
                     "maceta.jpeg", "rosa.jpeg", "tacos.jpeg", "sandia.jpg"
             },
             {
-                    "sandia.jpg", "venado.jpeg", "barril.jpeg", "cotorro.jpg",
+                    "sandia.jpg", "diablo.jpg", "barril.jpeg", "cotorro.jpg",
                     "gallo.jpg", "chavorruco.jpeg", "sol.jpg", "luchador.jpeg",
-                    "maceta.jpeg", "estrella.jpg", "tacos.jpeg", "sandia.jpg"
+                    "maceta.jpeg", "estrella.jpg", "pescado.jpg", "melon.jpg"
             },
             {
                     "alacran.jpg", "arana.jpg", "corazon.jpg", "cotorro.jpg",
@@ -183,11 +183,11 @@ public class Loteria extends Stage {
 
                     // Verificar condiciones de pérdida
                     if (nuevaImagen.equals("alacran.jpg") && indiceImagenActual > 0) {
-                        mostrarMensajePerdida(); // Mostrar mensaje de pérdida
+                        //mostrarMensajePerdida(); // Mostrar mensaje de pérdida
                     }
                     if (nuevaImagen.equals("venado.jpg") && tiempoRestante[0] == 0) {
                         if (!todosBotonesDeshabilitados()) {
-                            mostrarMensajePerdida();
+                            //mostrarMensajePerdida();
                         }
                     }
 
@@ -197,6 +197,7 @@ public class Loteria extends Stage {
                     if (indiceImagenActual == imagenesMazo.length) {
                         timeline.stop();
                         mostrarMensajePerdida();
+                        close();
                     }
                 }
             }
@@ -264,6 +265,7 @@ public class Loteria extends Stage {
         alert.setHeaderText(null);
         alert.setContentText("¡GANASTE!");
         alert.showAndWait();
+        close();
     }
 
     private void mostrarMensajePerdida() {
