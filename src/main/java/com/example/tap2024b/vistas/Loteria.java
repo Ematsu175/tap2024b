@@ -58,9 +58,9 @@ public class Loteria extends Stage {
             }
     };
 
-    private String[] imagenesMazo = {"alacran.jpg","arana.jpg","barril.jpeg","botella.jpeg","catrin.jpeg","chavorruco.jpeg","concha.jpeg","corazon.jpg","cotorro.jpg",
-                                     "diablo.jpg","estrella.jpg","gallo.jpg","luchador.jpeg","luna.jpg","maceta.jpeg","melon.jpg","pescado.jpg","rosa.jpeg",
-                                     "sandia.jpg","sol.jpg","tacos.jpeg","venado.jpeg"};
+    private String[] imagenesMazo = {"alacran.jpg","arana.jpg","barril.jpeg","botella.jpeg","catrin.jpeg","chavorruco.jpeg","concha.jpeg","corazon.jpg",
+                                     "cotorro.jpg", "diablo.jpg","estrella.jpg","gallo.jpg","luchador.jpeg","luna.jpg","maceta.jpeg","melon.jpg","pescado.jpg",
+                                     "rosa.jpeg", "sandia.jpg","sol.jpg","tacos.jpeg","venado.jpeg"};
     private int indiceActual = 0;
     private Button[][] arrBtnTab;
     private Panel pnlPrincipal;
@@ -166,14 +166,14 @@ public class Loteria extends Stage {
     private void iniciarTemporizador() {
         final int[] tiempoRestante = {2}; // Tiempo en segundos
         temporizadorActivo = true; // El temporizador está activo
-        indiceImagenActual = 0; // Reiniciar el índice de imágenes
+        indiceImagenActual = 0;
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (tiempoRestante[0] > 0) {
-                tiempoRestante[0]--; // Decrementar el tiempo
+                tiempoRestante[0]--;
             } else {
                 // Reiniciar el temporizador
-                tiempoRestante[0] = 2; // Reiniciar a 10 segundos
+                tiempoRestante[0] = 2;
 
                 // Mostrar la siguiente imagen en orden solo si no hemos llegado al final
                 if (indiceImagenActual < imagenesMazo.length) {
@@ -181,7 +181,7 @@ public class Loteria extends Stage {
                     Image imgNueva = new Image(getClass().getResource("/images/loteria/" + nuevaImagen).toString());
                     imvMazo.setImage(imgNueva);
 
-                    // Verificar condiciones de pérdida
+                    /*// Verificar condiciones de pérdida
                     if (nuevaImagen.equals("alacran.jpg") && indiceImagenActual > 0) {
                         //mostrarMensajePerdida(); // Mostrar mensaje de pérdida
                     }
@@ -189,12 +189,12 @@ public class Loteria extends Stage {
                         if (!todosBotonesDeshabilitados()) {
                             //mostrarMensajePerdida();
                         }
-                    }
+                    }*/
 
                     indiceImagenActual++;
                 } else {
                     // Si hemos mostrado todas las imágenes
-                    if (indiceImagenActual == imagenesMazo.length) {
+                    if (indiceImagenActual == imagenesMazo.length && !todosBotonesDeshabilitados()) {
                         timeline.stop();
                         mostrarMensajePerdida();
                         close();
@@ -213,7 +213,7 @@ public class Loteria extends Stage {
 
 
     private String obtenerImagenAleatoria() {
-        int index = (int) (Math.random() * imagenesMazo.length); // Seleccionar un índice aleatorio
+        int index = (int) (Math.random() * imagenesMazo.length);
         return imagenesMazo[index];
     }
 
