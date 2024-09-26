@@ -1,8 +1,8 @@
 package com.example.tap2024b.models;
 import java.sql.DriverManager;
 import java.sql.Connection;
-public class conexion {
-    static private String DB="sporify";
+public class Conexion {
+    static private String DB="spotify";
     static private String USER="admin";
     static private String PASS="123";
     static private String Host="localhost";
@@ -12,9 +12,10 @@ public class conexion {
     public static void CrearConexion(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-
+            connection = DriverManager.getConnection("jdbc:mysql://"+Host+":"+PORT+"/"+DB,USER,PASS);
+            System.out.println("Conexion establcida a la base de datos");
         } catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 }

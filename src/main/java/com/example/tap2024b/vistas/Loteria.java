@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -71,6 +72,7 @@ public class Loteria extends Stage {
         CrearUI();
         this.setTitle("Loteria Mexicana");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/loteria.css").toExternalForm());
         this.show();
     }
 
@@ -79,9 +81,14 @@ public class Loteria extends Stage {
         CrearTablilla(0);
         btnAnterior = new Button("Anterior");
         btnAnterior.setOnAction(e -> anteriorTablilla());
+        btnAnterior.getStyleClass().add("btn-anterior");
         btnSiguiente = new Button("Siguiente");
         btnSiguiente.setOnAction(e -> siguienteTablilla());
+        btnSiguiente.getStyleClass().add("btn-siguiente");
         hBoxButtons = new HBox(btnAnterior, btnSiguiente);
+        hBoxButtons.setAlignment(Pos.CENTER);
+        hBoxButtons.setSpacing(20);
+        hBoxButtons.setPadding(new Insets(20));
         vbxTablilla = new VBox(gdpTablilla, hBoxButtons);
 
         CrearMazo();
@@ -92,17 +99,19 @@ public class Loteria extends Stage {
         pnlPrincipal.setBody(hBoxMain);
         hBoxMain.setSpacing(20);
         hBoxMain.setPadding(new Insets(20));
-        escena = new Scene(pnlPrincipal, 900,650);
+        escena = new Scene(pnlPrincipal, 900,800);
         escena.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
     }
 
     private void CrearMazo() {
         Image imgMazo = new Image(getClass().getResource("/images/loteria/dorso.jpeg").toString());
         lblTimer = new Label("00:00");
+        lblTimer.getStyleClass().add("lbl-timer");
         imvMazo = new ImageView(imgMazo);
         imvMazo.setFitHeight(300);
         imvMazo.setFitWidth(200);
         btnIniciar = new Button("Iniciar Juego");
+        btnIniciar.getStyleClass().add("btn-iniciar");
         btnIniciar.setOnAction(event -> {
             iniciarTemporizador();
             deshabilitarBotones();

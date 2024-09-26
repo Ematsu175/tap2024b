@@ -1,3 +1,62 @@
 .root{
+    -fx-background-image: url("../images/fondo_loteria.jpg");
+    -fx-background-size: 100%, 200px;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center, bottom right;
+}
 
+.btn-iniciar{
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+}
+.btn-iniciar:hover {
+    -fx-background-color: #90EE90;
+    -fx-text-fill: black;
+}
+
+.btn-anterior{
+    -fx-background-color: #ADD8E6;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-margin: 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+}
+.btn-anterior:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: black;
+}
+
+.btn-siguiente{
+    -fx-background-color: #ADD8E6;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-margin: 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+}
+
+.btn-siguiente:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: black;
+}
+
+.lbl-timer{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-padding: 10px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
 }
