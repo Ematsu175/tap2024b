@@ -1,11 +1,16 @@
 package com.example.tap2024b.models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.Reader;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class ClienteDAO {
     private int id_cliente;
     private String nombre, email;
-    private char telefono;
+    private String telefono;
 
     public int getId_cliente() {
         return id_cliente;
@@ -31,11 +36,11 @@ public class ClienteDAO {
         this.email = email;
     }
 
-    public char getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(char telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
@@ -71,7 +76,25 @@ public class ClienteDAO {
         }
 
     }
-    public void selectAll(){
+    public ObservableList<ClienteDAO> selectAll(){
+        ClienteDAO objCte;
+        String query = "select * from cliente";
+        ObservableList<ClienteDAO> listaC = FXCollections.observableArrayList();
+        try {
+            Statement stmt = Conexion.connection.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+            while (res.next()){
+                objCte = new ClienteDAO();
+                objCte.id_cliente = res.getInt(0);
+                objCte.nombre = res.getString(1);
+                objCte.telefono = res.getString(2);
+                objCte.email = res.getString(3);
+                listaC.add(objCte);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return listaC;
 
     }
 }
