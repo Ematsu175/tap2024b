@@ -2,6 +2,7 @@ package com.example.tap2024b.vistas;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -123,14 +124,13 @@ public class Buscaminas extends Stage {
                 arrBotones[i][j].setPrefSize(75, 75);
 
                 gdpBotones.add(arrBotones[i][j], j, i);
-                arrBotones[i][j].setText(String.valueOf(matrizMinas[i][j]));
 
                 // Asignamos la acción de cada botón
                 final int fila = i;
                 final int columna = j;
                 arrBotones[i][j].setOnAction(event -> {
                     if (modoBandera) {
-                        // Si el botón ya tiene una imagen (graphic), la quitamos
+                        // Modo bandera: colocar o quitar bandera
                         if (arrBotones[fila][columna].getGraphic() != null) {
                             arrBotones[fila][columna].setGraphic(null); // Quitar la imagen
                         } else {
@@ -138,14 +138,39 @@ public class Buscaminas extends Stage {
                             ImageView imageView = new ImageView(imagenBandera);
                             imageView.setFitWidth(50);
                             imageView.setFitHeight(50);
-
                             arrBotones[fila][columna].setGraphic(imageView);
+                        }
+                    } else {
+                        if (arrBotones[fila][columna].getGraphic() == null) {
+                            // Si no tiene una bandera, revelar el contenido de la celda
+                            if (matrizMinas[fila][columna] == '@') {
+                                arrBotones[fila][columna].setText("💣");
+                                arrBotones[fila][columna].setDisable(true);
+                                revelarTodoElTablero();
+                                mostrarMensajeDerrota();
+                            } else {
+                                // Revelar el contenido de la celda (número de minas cercanas)
+                                int minasCercanas = contarMinasCercanas(fila, columna);
+                                arrBotones[fila][columna].setText(String.valueOf(minasCercanas));
+                                arrBotones[fila][columna].setDisable(true);
+
+                                // Si no hay minas cercanas, expandir a celdas adyacentes
+                                if (minasCercanas == 0) {
+                                    revelarCeldasAdyacentes(fila, columna);
+                                }
+
+                                // Verificar si ha ganado después de cada revelación
+                                if (verificarVictoria()) {
+                                    mostrarMensajeVictoria();
+                                }
+                            }
                         }
                     }
                 });
-
             }
         }
+
+
 
         System.out.println("max lenght: "+ matriz.length);
 
@@ -179,5 +204,82 @@ public class Buscaminas extends Stage {
         } while (numeroMinas >0);
 
     }
+
+    private int contarMinasCercanas(int fila, int columna) {
+        int minasCercanas = 0;
+        for (int i = Math.max(0, fila - 1); i <= Math.min(valor1 - 1, fila + 1); i++) {
+            for (int j = Math.max(0, columna - 1); j <= Math.min(valor2 - 1, columna + 1); j++) {
+                if (matrizMinas[i][j] == '@') {
+                    minasCercanas++;
+                }
+            }
+        }
+        return minasCercanas;
+    }
+
+    private void revelarCeldasAdyacentes(int fila, int columna) {
+        for (int i = Math.max(0, fila - 1); i <= Math.min(valor1 - 1, fila + 1); i++) {
+            for (int j = Math.max(0, columna - 1); j <= Math.min(valor2 - 1, columna + 1); j++) {
+                if (!arrBotones[i][j].isDisabled()) {
+                    int minasCercanas = contarMinasCercanas(i, j);
+                    arrBotones[i][j].setText(String.valueOf(minasCercanas));
+                    arrBotones[i][j].setDisable(true);
+
+                    if (minasCercanas == 0) {
+                        revelarCeldasAdyacentes(i, j); // Llamada recursiva para expandir
+                    }
+                }
+            }
+        }
+    }
+
+    private void mostrarMensajeDerrota() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Juego terminado");
+        alerta.setHeaderText(null);
+        alerta.setContentText("¡Has perdido!");
+        alerta.showAndWait();
+        // Aquí puedes reiniciar el juego si lo deseas
+    }
+
+    private void mostrarMensajeVictoria() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("¡Felicidades!");
+        alerta.setHeaderText(null);
+        alerta.setContentText("¡Has ganado!");
+        alerta.showAndWait();
+        // Aquí puedes reiniciar el juego si lo deseas
+    }
+
+    private boolean verificarVictoria() {
+        for (int i = 0; i < valor1; i++) {
+            for (int j = 0; j < valor2; j++) {
+                if (matrizMinas[i][j] != '@' && !arrBotones[i][j].isDisabled()) {
+                    // Si hay alguna celda sin mina que no ha sido revelada, aún no ha ganado
+                    return false;
+                }
+            }
+        }
+        // Si todas las celdas sin mina han sido reveladas, ha ganado
+        return true;
+    }
+
+    private void revelarTodoElTablero() {
+        for (int i = 0; i < valor1; i++) {
+            for (int j = 0; j < valor2; j++) {
+                if (matrizMinas[i][j] == '@') {
+                    // Si es una mina, mostrar la bomba
+                    arrBotones[i][j].setText("\uD83D\uDCA3");
+                } else {
+                    // Si no es una mina, mostrar el número de minas cercanas
+                    int minasCercanas = contarMinasCercanas(i, j);
+                    arrBotones[i][j].setText(String.valueOf(minasCercanas));
+                }
+                // Deshabilitar todos los botones para que ya no se puedan pulsar
+                arrBotones[i][j].setDisable(true);
+            }
+        }
+    }
+
 
 }
