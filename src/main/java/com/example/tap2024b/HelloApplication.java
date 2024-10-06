@@ -1,6 +1,7 @@
 package com.example.tap2024b;
 
 import com.example.tap2024b.models.Conexion;
+import com.example.tap2024b.vistas.Buscaminas;
 import com.example.tap2024b.vistas.Calculadora;
 import com.example.tap2024b.vistas.ListaClientes;
 import com.example.tap2024b.vistas.Loteria;
@@ -22,7 +23,7 @@ public class HelloApplication extends Application {
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2, menSalir;
-    private MenuItem mitCalculadora, mitLoteria, mitSpotify;
+    private MenuItem mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas;
 
 
     public void CrearUI(){
@@ -35,8 +36,11 @@ public class HelloApplication extends Application {
         mitSpotify = new MenuItem("Spotify");
         mitSpotify.setOnAction(event -> new ListaClientes());
 
+        mitBuscaminas = new MenuItem("Buscaminas");
+        mitBuscaminas.setOnAction(event -> new Buscaminas());
+
         menCompetencia1 = new Menu("Competencia1");
-        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas);
 
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdpPrincipal = new BorderPane();
