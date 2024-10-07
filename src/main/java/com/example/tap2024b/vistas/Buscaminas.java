@@ -50,6 +50,7 @@ public class Buscaminas extends Stage {
                     lblPrincipal.setText("Debes ingresar un número entre 1 y 20");
                 } else {
                     CrearTablero(txtCantBombas.getText());
+                    btnCalcularBotones.setDisable(true);
                 }
             }
         });
@@ -143,11 +144,11 @@ public class Buscaminas extends Stage {
                     } else {
                         if (arrBotones[fila][columna].getGraphic() == null) {
                             // Si no tiene una bandera, revelar el contenido de la celda
-                            if (matrizMinas[fila][columna] == '@') {
-                                arrBotones[fila][columna].setText("💣");
-                                arrBotones[fila][columna].setDisable(true);
-                                revelarTodoElTablero();
-                                mostrarMensajeDerrota();
+                                if (matrizMinas[fila][columna] == '@') {
+                                    arrBotones[fila][columna].setText("💣");
+                                    arrBotones[fila][columna].setDisable(true);
+                                    revelarTodoElTablero();
+                                    mostrarMensajeDerrota();
                             } else {
                                 // Revelar el contenido de la celda (número de minas cercanas)
                                 int minasCercanas = contarMinasCercanas(fila, columna);
@@ -169,8 +170,6 @@ public class Buscaminas extends Stage {
                 });
             }
         }
-
-
 
         System.out.println("max lenght: "+ matriz.length);
 
@@ -239,7 +238,7 @@ public class Buscaminas extends Stage {
         alerta.setHeaderText(null);
         alerta.setContentText("¡Has perdido!");
         alerta.showAndWait();
-        // Aquí puedes reiniciar el juego si lo deseas
+        btnCalcularBotones.setDisable(false);
     }
 
     private void mostrarMensajeVictoria() {
@@ -248,7 +247,7 @@ public class Buscaminas extends Stage {
         alerta.setHeaderText(null);
         alerta.setContentText("¡Has ganado!");
         alerta.showAndWait();
-        // Aquí puedes reiniciar el juego si lo deseas
+        btnCalcularBotones.setDisable(false);
     }
 
     private boolean verificarVictoria() {
