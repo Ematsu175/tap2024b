@@ -44,15 +44,19 @@ public class ClienteDAO {
         this.telefono = telefono;
     }
 
-    public void insert(){
+    public int insert(){
+        int rowCount;
         String query= "insert into cliente(nombre, telefono, email)"+
                       " values('"+this.nombre+"','"+this.telefono+"','"+this.email+"')";
         try {
             Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
+            rowCount = stmt.executeUpdate(query);
         } catch (Exception e){
+            rowCount = 0;
             e.printStackTrace();
         }
+
+        return rowCount;
 
     }
     public void update(){
@@ -85,10 +89,10 @@ public class ClienteDAO {
             ResultSet res = stmt.executeQuery(query);
             while (res.next()){
                 objCte = new ClienteDAO();
-                objCte.id_cliente = res.getInt(0);
-                objCte.nombre = res.getString(1);
-                objCte.telefono = res.getString(2);
-                objCte.email = res.getString(3);
+                objCte.id_cliente = res.getInt(1);
+                objCte.nombre = res.getString(2);
+                objCte.telefono = res.getString(3);
+                objCte.email = res.getString(4);
                 listaC.add(objCte);
             }
         } catch (Exception e){
