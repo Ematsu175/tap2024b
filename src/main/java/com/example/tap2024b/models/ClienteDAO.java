@@ -61,7 +61,7 @@ public class ClienteDAO {
     }
     public void update(){
         String query= "update cliente set nombre='"+this.nombre+
-                "' telefono='"+this.telefono+"', email='"+this.email+
+                "', telefono='"+this.telefono+"', email='"+this.email+
                 "' where id_cliente='"+id_cliente+"'";
         try {
             Statement stmt = Conexion.connection.createStatement();
