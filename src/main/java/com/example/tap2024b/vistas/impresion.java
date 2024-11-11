@@ -3,8 +3,10 @@ package com.example.tap2024b.vistas;
 import com.example.tap2024b.models.Tareas;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -35,16 +37,23 @@ public class impresion extends Stage {
     private VBox vbxBotonesTabla;
     Scene escena;
     private Timeline timelineProgress;
+    private boolean btnEncendidoApagado = true; // Por defecto, el simulador estará encendido
+
     public impresion(){
         CrearUI();
         this.setTitle("Impresora");
         this.setScene(escena);
         this.show();
+        escena.getStylesheets().add(getClass().getResource("/styles/impresora.css").toExternalForm());
+        iniciarHiloMonitoreo();
     }
 
     public void CrearUI(){
         btnAgregarTarea = new Button("Agregar Tarea");
+        btnAgregarTarea.getStyleClass().add("btn-AgregarTarea");
         btnApagar = new Button("Apagar");
+        btnApagar.getStyleClass().add("btn-encendderapagar");
+
         pgbBarra = new ProgressBar();
         tbvTareas = new TableView();
         TableColumn<Tareas, Integer> noArchivoCol = new TableColumn<>("No. Archivo");
@@ -65,17 +74,37 @@ public class impresion extends Stage {
         tbvTareas.getColumns().addAll(noArchivoCol, nombreArchivoCol, numHojasCol, fechaCol, horaCol);
         tbvTareas.setItems(tareasList);
 
+
         btnAgregarTarea.setOnAction(event -> AgregarTareas());
+        btnApagar.setOnAction(event-> EncendiderApagarImpresora());
 
         hbxBotones = new HBox(btnAgregarTarea, btnApagar);
+        hbxBotones.setPadding(new Insets(20));
+        hbxBotones.setSpacing(20);
         vbxBotonesTabla = new VBox(hbxBotones, pgbBarra, tbvTareas);
         escena = new Scene(vbxBotonesTabla, 800, 800);
 
     }
 
+    private void EncendiderApagarImpresora() {
+        btnEncendidoApagado = !btnEncendidoApagado; // Cambia el estado del simulador
+
+        if (btnEncendidoApagado) {
+            btnApagar.setText("Apagar");
+            if (!tareasList.isEmpty()) {
+                iniciarBarraProgreso();
+            }
+        } else {
+            btnApagar.setText("Encender");
+            if (timelineProgress != null) {
+                timelineProgress.stop();
+            }
+        }
+    }
+
     private void AgregarTareas(){
         noArchivo = random.nextInt(100) + 1;
-        numHojas = random.nextInt(100) + 1;
+        numHojas = random.nextInt(6) + 10;
         hora = LocalTime.now();
         fecha = LocalDate.now();
 
@@ -89,16 +118,24 @@ public class impresion extends Stage {
         Tareas nuevaTarea = new Tareas(noArchivo, nombreArchivo, numHojas, fecha, hora);
         tareasList.add(nuevaTarea);
 
-        // Si esta es la primera tarea, comienza a cargar la barra de progreso.
         if (tareasList.size() == 1) {
             iniciarBarraProgreso();
         }
 
     }
     private void iniciarBarraProgreso() {
+        if (!btnEncendidoApagado || tareasList.isEmpty()) {
+            return; // No hace nada si el simulador está apagado o no hay tareas
+        }
+
+        if (timelineProgress != null && timelineProgress.getStatus() == Timeline.Status.RUNNING) {
+            return; // Evita iniciar múltiples timelines si ya hay uno ejecutándose
+        }
+
+        Tareas tareaActual = tareasList.get(0); // Toma la primera tarea
         pgbBarra.setProgress(0); // Reinicia la barra de progreso
 
-        int tiempoTotal = random.nextInt(11) + 5; // Tiempo total entre 5 y 15 segundos para la tarea
+        int tiempoTotal = tareaActual.getNumHojas(); // Simula el tiempo según las hojas
         double incremento = 1.0 / (tiempoTotal * 10); // Incremento de progreso cada 100ms
 
         timelineProgress = new Timeline(new KeyFrame(Duration.millis(100), event -> {
@@ -108,8 +145,9 @@ public class impresion extends Stage {
             if (pgbBarra.getProgress() >= 1.0) {
                 timelineProgress.stop();
                 eliminarPrimeraTarea();
-                if (!tareasList.isEmpty()) {
-                    iniciarBarraProgreso(); // Inicia la barra para la siguiente tarea
+
+                if (btnEncendidoApagado && !tareasList.isEmpty()) {
+                    Platform.runLater(this::iniciarBarraProgreso); // Procesa la siguiente tarea
                 }
             }
         }));
@@ -122,4 +160,24 @@ public class impresion extends Stage {
             tareasList.remove(0); // Elimina la tarea más antigua
         }
     }
+
+    private void iniciarHiloMonitoreo() {
+        System.out.println("Hilo monitoreo Iniciado");
+        Thread hiloMonitoreo = new Thread(() -> {
+            while (true) {
+                if (!tareasList.isEmpty() && pgbBarra.getProgress() == 0) {
+                    Platform.runLater(this::iniciarBarraProgreso); // Inicia la barra de progreso para la primera tarea
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        hiloMonitoreo.setDaemon(true);
+        hiloMonitoreo.start();
+    }
+
 }

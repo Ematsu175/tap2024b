@@ -1,0 +1,53 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #023e7e, #ffffff);
+}
+
+.btn-AgregarTarea{
+    -fx-background-color: #9cff8b;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-margin:20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.btn-AgregarTarea:hover{
+    -fx-background-color: #90EE90;
+    -fx-text-fill: black;
+}
+
+.btn-encendderapagar {
+    -fx-background-color: #FFFFFF; /* Verde para encendido */
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-margin:20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.btn-encendderapagar:hover {
+    -fx-background-color: #d8d8d8;
+    -fx-text-fill: black;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell .text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
