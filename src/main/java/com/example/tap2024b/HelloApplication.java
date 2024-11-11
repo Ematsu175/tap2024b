@@ -5,6 +5,7 @@ import com.example.tap2024b.vistas.Buscaminas;
 import com.example.tap2024b.vistas.Calculadora;
 import com.example.tap2024b.vistas.ListaClientes;
 import com.example.tap2024b.vistas.Loteria;
+import com.example.tap2024b.vistas.impresion;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,7 +24,7 @@ public class HelloApplication extends Application {
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2, menSalir;
-    private MenuItem mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas;
+    private MenuItem mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas, mitImpresora;
 
 
     public void CrearUI(){
@@ -39,10 +40,16 @@ public class HelloApplication extends Application {
         mitBuscaminas = new MenuItem("Buscaminas");
         mitBuscaminas.setOnAction(event -> new Buscaminas());
 
+        mitImpresora = new MenuItem("Impresora");
+        mitImpresora.setOnAction(event -> new impresion());
+
         menCompetencia1 = new Menu("Competencia1");
         menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas);
 
-        mnbPrincipal = new MenuBar(menCompetencia1);
+        menCompetencia2 = new Menu("Competencia2");
+        menCompetencia2.getItems().addAll(mitImpresora);
+
+        mnbPrincipal = new MenuBar(menCompetencia1, menCompetencia2);
         bdpPrincipal = new BorderPane();
         bdpPrincipal.setTop(mnbPrincipal);
     }
@@ -64,10 +71,3 @@ public class HelloApplication extends Application {
     }
 }
 
-// 16 botones
-// 1 textfield
-// 1 girdpane
-// 1 vbox
-
-
-// git pull origin main --> subir a repositorio colaborativo

@@ -46,7 +46,7 @@ public class ClienteDAO {
 
     public int insert(){
         int rowCount;
-        String query= "insert into cliente(nombre, telefono, email)"+
+        String query= "insert into cliente(cliente, telefono, email)"+
                       " values('"+this.nombre+"','"+this.telefono+"','"+this.email+"')";
         try {
             Statement stmt = Conexion.connection.createStatement();
