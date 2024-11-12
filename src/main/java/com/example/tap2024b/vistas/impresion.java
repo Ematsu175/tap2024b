@@ -125,18 +125,18 @@ public class impresion extends Stage {
     }
     private void iniciarBarraProgreso() {
         if (!btnEncendidoApagado || tareasList.isEmpty()) {
-            return; // No hace nada si el simulador está apagado o no hay tareas
+            return;
         }
 
         if (timelineProgress != null && timelineProgress.getStatus() == Timeline.Status.RUNNING) {
             return; // Evita iniciar múltiples timelines si ya hay uno ejecutándose
         }
 
-        Tareas tareaActual = tareasList.get(0); // Toma la primera tarea
-        pgbBarra.setProgress(0); // Reinicia la barra de progreso
+        Tareas tareaActual = tareasList.get(0);
+        pgbBarra.setProgress(0);
 
-        int tiempoTotal = tareaActual.getNumHojas(); // Simula el tiempo según las hojas
-        double incremento = 1.0 / (tiempoTotal * 10); // Incremento de progreso cada 100ms
+        int tiempoTotal = tareaActual.getNumHojas();
+        double incremento = 1.0 / (tiempoTotal * 10);
 
         timelineProgress = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             double progresoActual = pgbBarra.getProgress();
@@ -147,7 +147,7 @@ public class impresion extends Stage {
                 eliminarPrimeraTarea();
 
                 if (btnEncendidoApagado && !tareasList.isEmpty()) {
-                    Platform.runLater(this::iniciarBarraProgreso); // Procesa la siguiente tarea
+                    Platform.runLater(() -> this.iniciarBarraProgreso()); // Procesa la siguiente tarea
                 }
             }
         }));
@@ -157,7 +157,7 @@ public class impresion extends Stage {
 
     private void eliminarPrimeraTarea() {
         if (!tareasList.isEmpty()) {
-            tareasList.remove(0); // Elimina la tarea más antigua
+            tareasList.remove(0);
         }
     }
 
@@ -166,7 +166,7 @@ public class impresion extends Stage {
         Thread hiloMonitoreo = new Thread(() -> {
             while (true) {
                 if (!tareasList.isEmpty() && pgbBarra.getProgress() == 0) {
-                    Platform.runLater(this::iniciarBarraProgreso); // Inicia la barra de progreso para la primera tarea
+                    Platform.runLater(() -> this.iniciarBarraProgreso()); // Inicia la barra de progreso para la primera tarea
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
