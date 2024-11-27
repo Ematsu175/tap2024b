@@ -1,11 +1,7 @@
 package com.example.tap2024b;
 
 import com.example.tap2024b.models.Conexion;
-import com.example.tap2024b.vistas.Buscaminas;
-import com.example.tap2024b.vistas.Calculadora;
-import com.example.tap2024b.vistas.ListaClientes;
-import com.example.tap2024b.vistas.Loteria;
-import com.example.tap2024b.vistas.impresion;
+import com.example.tap2024b.vistas.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,7 +31,7 @@ public class HelloApplication extends Application {
         mitLoteria.setOnAction(event -> new Loteria());
 
         mitSpotify = new MenuItem("Spotify");
-        mitSpotify.setOnAction(event -> new ListaClientes());
+        mitSpotify.setOnAction(event -> new Spotify());
 
         mitBuscaminas = new MenuItem("Buscaminas");
         mitBuscaminas.setOnAction(event -> new Buscaminas());
