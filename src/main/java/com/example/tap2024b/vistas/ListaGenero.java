@@ -1,6 +1,7 @@
 package com.example.tap2024b.vistas;
 
 import com.example.tap2024b.components.ButtonCell;
+import com.example.tap2024b.components.ButtonCellGenero;
 import com.example.tap2024b.models.ClienteDAO;
 import com.example.tap2024b.models.GeneroDAO;
 import javafx.beans.value.ObservableValue;
@@ -49,41 +50,19 @@ public class ListaGenero extends Stage {
         tbcNombre.setCellValueFactory(new PropertyValueFactory<>("genero"));
 
         TableColumn<GeneroDAO, String> tbcEditar = new TableColumn<>("Editar");
-        tbcEditar.setCellFactory(column -> new TableCell<>() {
-            private final Button btn = new Button("Editar");
+        tbcEditar.setCellFactory(new Callback<TableColumn<GeneroDAO, String>, TableCell<GeneroDAO, String>>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    btn.setOnAction(event -> {
-                        GeneroDAO genero = getTableView().getItems().get(getIndex());
-                        new FormGenero(tbvGenero, genero);
-                    });
-                    setGraphic(btn);
-                }
+            public TableCell<GeneroDAO, String> call(TableColumn<GeneroDAO, String> generoDAOStringTableColumn) {
+                return new ButtonCellGenero("Editar");
             }
         });
 
         // Columna para el botón Eliminar
         TableColumn<GeneroDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
-        tbcEliminar.setCellFactory(column -> new TableCell<>() {
-            private final Button btn = new Button("Eliminar");
-
+        tbcEliminar.setCellFactory(new Callback<TableColumn<GeneroDAO, String>, TableCell<GeneroDAO, String>>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    btn.setOnAction(event -> {
-                        GeneroDAO genero = getTableView().getItems().get(getIndex());
-                        genero.delete();
-                        tbvGenero.setItems(objGenero.selectAll()); // Refresca la tabla
-                    });
-                    setGraphic(btn);
-                }
+            public TableCell<GeneroDAO, String> call(TableColumn<GeneroDAO, String> generoDAOStringTableColumn) {
+                return new ButtonCellGenero("Eliminar");
             }
         });
 

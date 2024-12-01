@@ -3,16 +3,14 @@ package com.example.tap2024b.vistas;
 import com.example.tap2024b.models.ClienteDAO;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class FormCliente extends Stage {
     private Scene escena;
     private TextField txtNombre, txtEmail, txtTelefono;
+    private PasswordField txtPass;
     private Button btnGuardar;
     private VBox vbox;
     private ClienteDAO objCliente;
@@ -26,6 +24,7 @@ public class FormCliente extends Stage {
             txtNombre.setText(objCliente.getNombre());
             txtEmail.setText(objCliente.getEmail());
             txtTelefono.setText(objCliente.getTelefono());
+            txtPass.setText(objCliente.getContrasena());
             this.setTitle("Editar Cliente");
         }else {
             this.objCliente = new ClienteDAO();
@@ -43,18 +42,21 @@ public class FormCliente extends Stage {
         txtEmail.setPromptText("Email del cliente");
         txtTelefono = new TextField();
         txtTelefono.setPromptText("Telefono del cliente");
+        txtPass = new PasswordField();
+        txtPass.setPromptText("Ingres la contraseña");
         btnGuardar = new Button("Guardar");
         btnGuardar.setOnAction(event -> GuardarCliente());
-        vbox = new VBox(txtNombre, txtEmail, txtTelefono, btnGuardar);
+        vbox = new VBox(txtNombre, txtEmail, txtTelefono, txtPass, btnGuardar);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
-        escena = new Scene(vbox, 150, 150);
+        escena = new Scene(vbox, 250, 250);
     }
 
     private void GuardarCliente() {
         objCliente.setEmail(txtEmail.getText());
         objCliente.setNombre(txtNombre.getText());
         objCliente.setTelefono(txtTelefono.getText());
+        objCliente.setContrasena(txtPass.getText());
         String msj;
         Alert.AlertType type;
 
@@ -76,6 +78,6 @@ public class FormCliente extends Stage {
 
         tbvClientes.setItems(objCliente.selectAll());
         tbvClientes.refresh();
-
+        this.close();
     }
 }

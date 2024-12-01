@@ -12,6 +12,15 @@ public class ClienteDAO {
     private int id_cliente;
     private String nombre, email;
     private String telefono;
+    private String contrasena;
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
 
     public int getId_cliente() {
         return id_cliente;
@@ -47,8 +56,8 @@ public class ClienteDAO {
 
     public int insert(){
         int rowCount;
-        String query= "insert into cliente(cliente, telefono, email)"+
-                      " values('"+this.nombre+"','"+this.telefono+"','"+this.email+"')";
+        String query= "insert into cliente(cliente, telefono, email, contrasena)"+
+                      " values('"+this.nombre+"','"+this.telefono+"','"+this.email+"','"+this.contrasena+"')";
         try {
             Statement stmt = Conexion.connection.createStatement();
             rowCount = stmt.executeUpdate(query);
@@ -61,9 +70,7 @@ public class ClienteDAO {
 
     }
     public void update(){
-        String query= "update cliente set nombre='"+this.nombre+
-                "', telefono='"+this.telefono+"', email='"+this.email+
-                "' where id_cliente='"+id_cliente+"'";
+        String query= "update cliente set cliente='"+this.nombre+ "', telefono='"+this.telefono+"', email='"+this.email+"', contrasena='"+this.contrasena+"' where id_cliente='"+id_cliente+"'";
         try {
             Statement stmt = Conexion.connection.createStatement();
             stmt.executeUpdate(query);

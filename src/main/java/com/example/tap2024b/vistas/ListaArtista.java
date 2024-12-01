@@ -1,5 +1,6 @@
 package com.example.tap2024b.vistas;
 
+import com.example.tap2024b.components.ButtonCellArtista;
 import com.example.tap2024b.models.ArtistaDAO;
 import com.example.tap2024b.models.GeneroDAO;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class ListaArtista extends Stage {
     private TableView<ArtistaDAO> tbvArtista;
@@ -46,41 +48,19 @@ public class ListaArtista extends Stage {
         tbcArtista.setCellValueFactory(new PropertyValueFactory<>("artista"));
 
         TableColumn<ArtistaDAO, String> tbcEditar = new TableColumn<>("Editar");
-        tbcEditar.setCellFactory(column -> new TableCell<>() {
-            private final Button btn = new Button("Editar");
+        tbcEditar.setCellFactory(new Callback<TableColumn<ArtistaDAO, String>, TableCell<ArtistaDAO, String>>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    btn.setOnAction(event -> {
-                        ArtistaDAO artista = getTableView().getItems().get(getIndex());
-                        new FormArtista(tbvArtista, artista);
-                    });
-                    setGraphic(btn);
-                }
+            public TableCell<ArtistaDAO, String> call(TableColumn<ArtistaDAO, String> artistaDAOStringTableColumn) {
+                return new ButtonCellArtista("Editar");
             }
         });
 
         // Columna para el botón Eliminar
         TableColumn<ArtistaDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
-        tbcEliminar.setCellFactory(column -> new TableCell<>() {
-            private final Button btn = new Button("Eliminar");
-
+        tbcEliminar.setCellFactory(new Callback<TableColumn<ArtistaDAO, String>, TableCell<ArtistaDAO, String>>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    btn.setOnAction(event -> {
-                        ArtistaDAO artista = getTableView().getItems().get(getIndex());
-                        artista.delete();
-                        tbvArtista.setItems(objArtista.selectAll()); // Refresca la tabla
-                    });
-                    setGraphic(btn);
-                }
+            public TableCell<ArtistaDAO, String> call(TableColumn<ArtistaDAO, String> artistaDAOStringTableColumn) {
+                return new ButtonCellArtista("Eliminar");
             }
         });
 

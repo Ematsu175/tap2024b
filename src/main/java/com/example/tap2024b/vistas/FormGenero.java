@@ -66,6 +66,6 @@ public class FormGenero extends Stage {
 
         tbvGenero.setItems(objGenero.selectAll());
         tbvGenero.refresh();
-
+        this.close();
     }
 }
