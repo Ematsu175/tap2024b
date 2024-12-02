@@ -27,10 +27,18 @@ public class prueba extends Stage {
         // Crear la TableView y configurar las columnas
         TableView<Data> table = new TableView<>();
         TableColumn<Data, Integer> idColumn = new TableColumn<>("ID");
+        TableColumn<Data, String> albumColumn = new TableColumn<>("Album");
+        TableColumn<Data, String> fechaColumn = new TableColumn<>("Fecha de Lanzamiento");
         TableColumn<Data, Image> imageColumn = new TableColumn<>("Imagen");
 
         // Configurar columna ID
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id_album"));
+
+        // Configurar columna Album
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+
+        // Configurar columna Fecha de Lanzamiento
+        fechaColumn.setCellValueFactory(new PropertyValueFactory<>("fecha_lanzamiento"));
 
         // Configurar columna de imagen
         imageColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Data, Image>, ObservableValue<Image>>() {
@@ -63,6 +71,8 @@ public class prueba extends Stage {
 
         // Añadir las columnas a la tabla
         table.getColumns().add(idColumn);
+        table.getColumns().add(albumColumn);
+        table.getColumns().add(fechaColumn);
         table.getColumns().add(imageColumn);
 
         // Obtener los datos de la base de datos
@@ -81,20 +91,22 @@ public class prueba extends Stage {
 
     private List<Data> fetchDataFromDatabase() {
         List<Data> dataList = new ArrayList<>();
-        String query = "SELECT id, imagen FROM imagenes"; // Ajusta el nombre de tu tabla
+        String query = "SELECT id_album, album, fecha_lanzamiento, imagen FROM album"; // Ajusta el nombre de tu tabla
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int id_album = rs.getInt("id_album");
+                String album = rs.getString("album");
+                String fecha_lanzamiento = rs.getString("fecha_lanzamiento");
                 Blob blob = rs.getBlob("imagen");
                 Image image = null;
                 if (blob != null) {
                     image = new Image(blob.getBinaryStream());
                 }
-                dataList.add(new Data(id, image));
+                dataList.add(new Data(id_album, album, fecha_lanzamiento, image));
             }
 
         } catch (SQLException e) {
@@ -105,16 +117,28 @@ public class prueba extends Stage {
 
     // Asegúrate de que esta clase esté pública y accesible
     public static class Data {
-        private final Integer id;
+        private final Integer id_album;
+        private final String album;
+        private final String fecha_lanzamiento;
         private final Image image;
 
-        public Data(Integer id, Image image) {
-            this.id = id;
+        public Data(Integer id_album, String album, String fecha_lanzamiento, Image image) {
+            this.id_album = id_album;
+            this.album = album;
+            this.fecha_lanzamiento = fecha_lanzamiento;
             this.image = image;
         }
 
-        public Integer getId() {
-            return id;
+        public Integer getId_album() {
+            return id_album;
+        }
+
+        public String getAlbum() {
+            return album;
+        }
+
+        public String getFecha_lanzamiento() {
+            return fecha_lanzamiento;
         }
 
         public Image getImage() {

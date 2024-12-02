@@ -14,13 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-
 public class ListaAlbum extends Stage {
     private TableView<AlbumDAO> tbvAlbum;
     private Button btnAgregar;

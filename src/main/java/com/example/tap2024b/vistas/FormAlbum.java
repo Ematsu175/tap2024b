@@ -99,7 +99,7 @@ public class FormAlbum extends Stage {
         alerta.setContentText(msj);
         alerta.showAndWait();
 
-        tbvAlbum.setItems(objAlbum.selectAll());  // Refrescar la tabla
+        //tbvAlbum.setItems(objAlbum.selectAll());  // Refrescar la tabla
         tbvAlbum.refresh();
         this.close();
     }
