@@ -36,14 +36,14 @@ public class FormArtista extends Stage {
         txtArtista = new TextField();
         txtArtista.setPromptText("Nombre del Artista");
         Button btnGuardar = new Button("Guardar");
-        btnGuardar.setOnAction(event -> GuardarCliente());
+        btnGuardar.setOnAction(event -> Guardar());
         VBox vbox = new VBox(txtArtista, btnGuardar);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
         escena = new Scene(vbox, 150, 150);
     }
 
-    private void GuardarCliente() {
+    private void Guardar() {
         objArtista.setArtista(txtArtista.getText());
         String msj;
         Alert.AlertType type;
