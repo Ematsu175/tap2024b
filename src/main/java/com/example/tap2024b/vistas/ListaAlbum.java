@@ -24,9 +24,16 @@ public class ListaAlbum extends Stage {
 
     public ListaAlbum() {
         CrearUI();
+
+        tbvAlbum.refresh();
         this.setTitle("Albums");
         this.setScene(escena);
         this.show();
+    }
+
+    private void CargarDatos() {
+        AlbumDAO objAlbum = new AlbumDAO();
+        tbvAlbum.setItems(objAlbum.selectAll());
     }
 
     private void CrearUI() {
@@ -105,22 +112,5 @@ public class ListaAlbum extends Stage {
         tbvAlbum.setItems(objAlbum.selectAll());
     }
 
-    public static class Data {
-        private final Integer id;
-        private final Image image;
-
-        public Data(Integer id, Image image) {
-            this.id = id;
-            this.image = image;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public Image getImage() {
-            return image;
-        }
-    }
 }
 

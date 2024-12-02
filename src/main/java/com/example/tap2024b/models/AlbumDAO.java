@@ -112,6 +112,7 @@ public class AlbumDAO {
                 if (inputStream != null) {
                     Image image = new Image(inputStream);
                     objAlb.setImg_album(image);  // Almacenar la imagen como un Image
+
                 } else {
                     System.out.println("No se encontró la imagen en la base de datos.");
                 }
