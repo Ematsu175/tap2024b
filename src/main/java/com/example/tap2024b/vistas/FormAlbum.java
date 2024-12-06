@@ -88,18 +88,24 @@ public class FormAlbum extends Stage {
         Alert.AlertType tipoAlerta;
 
         if (objAlbum.getId_album() > 0) {
-            // Implementa la lógica de actualización aquí si es necesario
-            mensaje = "Actualizar aún no está implementado.";
-            tipoAlerta = Alert.AlertType.WARNING;
+            // Actualizar un registro existente
+            int rowsAffected = objAlbum.update();
+            if (rowsAffected > 0) {
+                mensaje = "Registro actualizado correctamente.";
+                tipoAlerta = Alert.AlertType.INFORMATION;
+            } else {
+                mensaje = "Error al actualizar el registro.";
+                tipoAlerta = Alert.AlertType.ERROR;
+            }
         } else {
-            // Validar que se haya seleccionado una imagen antes de intentar guardar
+            // Insertar un nuevo registro
             if (objAlbum.getImagePath() != null && !objAlbum.getImagePath().isEmpty()) {
                 int rowsAffected = objAlbum.insert();
                 if (rowsAffected > 0) {
                     mensaje = "Registro insertado correctamente.";
                     tipoAlerta = Alert.AlertType.INFORMATION;
                 } else {
-                    mensaje = "Error al insertar el registro. Revisa la ruta de la imagen.";
+                    mensaje = "Error al insertar el registro.";
                     tipoAlerta = Alert.AlertType.ERROR;
                 }
             } else {
@@ -118,7 +124,7 @@ public class FormAlbum extends Stage {
         tbvAlbum.setItems(objAlbum.selectAll());
         tbvAlbum.refresh();
 
-        // Cerrar el formulario después de guardar
+        // Cerrar el formulario
         this.close();
     }
 

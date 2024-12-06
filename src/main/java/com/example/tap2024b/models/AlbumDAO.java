@@ -76,6 +76,38 @@ public class AlbumDAO {
         return rowCount;
     }
 
+    public int update() {
+        int rowCount = 0;
+
+        try {
+            // Construcción de la consulta SQL
+            String query = "UPDATE album SET album = ?, fecha_lanzamiento = ?, imagen = ? WHERE id_album = ?";
+
+            try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+                stmt.setString(1, this.album); // Nombre del álbum
+                stmt.setString(2, this.fecha_lanzamiento); // Fecha de lanzamiento
+
+                // Leer los datos de la imagen como bytes si se proporcionó una nueva imagen
+                if (this.imagePath != null) {
+                    File file = new File(this.imagePath);
+                    FileInputStream fis = new FileInputStream(file);
+                    stmt.setBinaryStream(3, fis, (int) file.length()); // Insertar los datos binarios de la imagen
+                } else {
+                    stmt.setNull(3, java.sql.Types.BLOB); // Si no hay nueva imagen, insertar NULL
+                }
+
+                stmt.setInt(4, this.id_album); // ID del álbum a actualizar
+
+                rowCount = stmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rowCount;
+    }
+
+
 
     // Eliminar un álbum
     public void delete() {
