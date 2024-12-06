@@ -80,5 +80,8 @@ public class ArtistaDAO {
         return listaA;
 
     }
-
+    @Override
+    public String toString() {
+        return this.artista; // Retorna el nombre de la canción para mostrarlo en el ComboBox
+    }
 }

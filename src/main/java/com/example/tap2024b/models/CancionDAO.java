@@ -141,6 +141,9 @@ public class CancionDAO {
         return listaCan;
     }
 
-
+    @Override
+    public String toString() {
+        return this.cancion; // Retorna el nombre de la canción para mostrarlo en el ComboBox
+    }
 
 }

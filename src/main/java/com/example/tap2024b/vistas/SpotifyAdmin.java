@@ -14,7 +14,7 @@ public class SpotifyAdmin extends Stage {
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
     private Menu Opciones;
-    private MenuItem mitClientes, mitGenero, mitArtistas, mitAlbum, mitPrueba, mitCancion;
+    private MenuItem mitClientes, mitGenero, mitArtistas, mitAlbum, mitPrueba, mitCancion, mitAlbumCancion, mitInterprete;
 
 
     public SpotifyAdmin(){
@@ -44,8 +44,14 @@ public class SpotifyAdmin extends Stage {
         mitCancion = new MenuItem("Cancion");
         mitCancion.setOnAction(event -> new ListaCanciones());
 
+        mitAlbumCancion = new MenuItem("Album y Cancion");
+        mitAlbumCancion.setOnAction(event -> new ListaAlbumCancion());
+
+        mitInterprete = new MenuItem("Interpretacion");
+        mitInterprete.setOnAction(event -> new ListaInterprete());
+
         Opciones = new Menu("Opciones");
-        Opciones.getItems().addAll(mitClientes, mitGenero, mitArtistas, mitAlbum, mitCancion, mitPrueba);
+        Opciones.getItems().addAll(mitClientes, mitGenero, mitArtistas, mitAlbum, mitCancion, mitAlbumCancion, mitInterprete, mitPrueba);
 
         mnbPrincipal = new MenuBar(Opciones);
         bdpPrincipal = new BorderPane();

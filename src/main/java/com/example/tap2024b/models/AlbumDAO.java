@@ -146,5 +146,10 @@ public class AlbumDAO {
         return listaAlb;
     }
 
+    @Override
+    public String toString() {
+        return this.album; // Retorna el nombre del álbum para mostrarlo en el ComboBox
+    }
+
 }
 
