@@ -7,114 +7,112 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class AlbumDAO {
+    // Propiedades
     private int id_album;
     private String album;
     private String fecha_lanzamiento;
     private Image img_album;
-
-    public int getId_album() {
-        return id_album;
+    private InputStream imageStream;
+    private String imagePath;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setId_album(int id_album) {
-        this.id_album = id_album;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    public InputStream getImageStream() {
+        return imageStream;
     }
 
-    public String getAlbum() {
-        return album;
+    public void setImageStream(InputStream imageStream) {
+        this.imageStream = imageStream;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
-    }
+    public int getId_album() { return id_album; }
+    public void setId_album(int id_album) { this.id_album = id_album; }
+    public String getAlbum() { return album; }
+    public void setAlbum(String album) { this.album = album; }
+    public String getFecha_lanzamiento() { return fecha_lanzamiento; }
+    public void setFecha_lanzamiento(String fecha_lanzamiento) { this.fecha_lanzamiento = fecha_lanzamiento; }
+    public Image getImg_album() { return img_album; }
+    public void setImg_album(Image img_album) { this.img_album = img_album; }
 
-    public String getFecha_lanzamiento() {
-        return fecha_lanzamiento;
-    }
-
-    public void setFecha_lanzamiento(String fecha_lanzamiento) {
-        this.fecha_lanzamiento = String.valueOf(fecha_lanzamiento);
-    }
-
-    public Image getImg_album() {
-        return img_album;
-    }
-
-    public void setImg_album(Image img_album) {
-        this.img_album = img_album;
-    }
-
+    // Insertar un álbum con imagen
     public int insert() {
-        int rowCount;
-        // Cambio de 'foto' a 'imagen' para que coincida con el nombre de la columna en la base de datos
-        String query = "INSERT INTO album(album, fecha_lanzamiento, imagen) VALUES(?, ?, ?)";
+        int rowCount = 0;
 
-        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
-            // Establecer los valores de las columnas
-            stmt.setString(1, this.album);
-            stmt.setString(2, this.fecha_lanzamiento);
+        try {
+            // Construcción de la consulta SQL
+            String query = "INSERT INTO album (album, fecha_lanzamiento, imagen) VALUES (?, ?, ?)";
 
-            // Convertir la imagen a un arreglo de bytes y establecerlo en el PreparedStatement
-            stmt.setBytes(3, imageToByteArray(this.img_album));
+            try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+                stmt.setString(1, this.album); // Nombre del álbum
+                stmt.setString(2, this.fecha_lanzamiento); // Fecha de lanzamiento
 
-            rowCount = stmt.executeUpdate();
+                // Leer los datos de la imagen como bytes
+                if (this.imagePath != null) {
+                    File file = new File(this.imagePath);
+                    FileInputStream fis = new FileInputStream(file);
+                    stmt.setBinaryStream(3, fis, (int) file.length()); // Insertar los datos binarios de la imagen
+                } else {
+                    stmt.setNull(3, java.sql.Types.BLOB); // Si no hay imagen, insertar NULL
+                }
+
+                rowCount = stmt.executeUpdate();
+            }
         } catch (Exception e) {
-            rowCount = 0;
             e.printStackTrace();
         }
 
         return rowCount;
     }
 
-    public void update(){
-        String query= "update album set album='"+this.album+"', fecha_lanzamiento='"+this.fecha_lanzamiento+"' ,imagen='"+this.img_album+"' where id_album='"+this.id_album+"'";
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void delete(){
-        String query= "delete from album where id_album='"+id_album+"'";
-        try {
-            Statement stmt = Conexion.connection.createStatement();
-            stmt.executeUpdate(query);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
 
+    // Eliminar un álbum
+    public void delete() {
+        String query = "DELETE FROM album WHERE id_album = ?";
+        try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
+            stmt.setInt(1, this.id_album);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    // Seleccionar todos los álbumes
     public ObservableList<AlbumDAO> selectAll() {
-        AlbumDAO objAlb;
-        String query = "SELECT * FROM album";
         ObservableList<AlbumDAO> listaAlb = FXCollections.observableArrayList();
+        String query = "SELECT * FROM album";
 
-        try (Statement stmt = Conexion.connection.createStatement()) {
-            ResultSet res = stmt.executeQuery(query);
+        try (Statement stmt = Conexion.connection.createStatement();
+             ResultSet res = stmt.executeQuery(query)) {
+
             while (res.next()) {
-                objAlb = new AlbumDAO();
-                objAlb.setId_album(res.getInt("id_album"));
-                objAlb.setAlbum(res.getString("album"));
-                objAlb.setFecha_lanzamiento(res.getString("fecha_lanzamiento"));
+                AlbumDAO objAlb = new AlbumDAO();
+                objAlb.id_album = res.getInt("id_album");
+                objAlb.album = res.getString("album");
+                objAlb.fecha_lanzamiento = res.getString("fecha_lanzamiento");
 
-                // Obtener la imagen desde el BLOB
-                InputStream inputStream = res.getBlob("imagen").getBinaryStream();
-
+                // Leer los datos binarios de la imagen
+                InputStream inputStream = res.getBinaryStream("imagen");
                 if (inputStream != null) {
-                    Image image = new Image(inputStream);
-                    objAlb.setImg_album(image);  // Almacenar la imagen como un Image
-
+                    try {
+                        Image image = new Image(inputStream);
+                        objAlb.setImg_album(image);
+                    } catch (Exception e) {
+                        System.err.println("Error al convertir el InputStream a Image: " + e.getMessage());
+                    }
                 } else {
-                    System.out.println("No se encontró la imagen en la base de datos.");
+                    System.out.println("El campo imagen es NULL para el registro con id_album " + objAlb.id_album);
                 }
 
                 listaAlb.add(objAlb);
@@ -122,39 +120,11 @@ public class AlbumDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return listaAlb;
     }
 
 
 
-    public byte[] imageToByteArray(Image image) {
-        // Creamos un ByteArrayOutputStream donde escribiremos la imagen en formato de bytes
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        // Obtenemos el ancho y alto de la imagen
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-
-        // Creamos un PixelReader para acceder a los píxeles de la imagen
-        PixelReader pixelReader = image.getPixelReader();
-
-        if (pixelReader != null) {
-            // Iteramos sobre todos los píxeles de la imagen
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    // Leemos el color de cada píxel
-                    Color color = pixelReader.getColor(x, y);
-
-                    // Convertimos el color a sus componentes RGBA (rojo, verde, azul, alfa)
-                    byteArrayOutputStream.write((int)(color.getRed() * 255));
-                    byteArrayOutputStream.write((int)(color.getGreen() * 255));
-                    byteArrayOutputStream.write((int)(color.getBlue() * 255));
-                    byteArrayOutputStream.write((int)(color.getOpacity() * 255)); // Alfa (transparencia)
-                }
-            }
-        }
-
-        // Retornamos el arreglo de bytes que representa la imagen
-        return byteArrayOutputStream.toByteArray();
-    }
 }
+

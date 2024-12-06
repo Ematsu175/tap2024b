@@ -1,148 +1,120 @@
 package com.example.tap2024b.vistas;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TableCell;
-import javafx.util.Callback;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 
+import java.io.ByteArrayInputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class prueba extends Stage {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/spotify";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "123";
+    private TableView<Album> tableView;
 
     public prueba() {
-        // Crear la TableView y configurar las columnas
-        TableView<Data> table = new TableView<>();
-        TableColumn<Data, Integer> idColumn = new TableColumn<>("ID");
-        TableColumn<Data, String> albumColumn = new TableColumn<>("Album");
-        TableColumn<Data, String> fechaColumn = new TableColumn<>("Fecha de Lanzamiento");
-        TableColumn<Data, Image> imageColumn = new TableColumn<>("Imagen");
+        setTitle("Album Table");
+        tableView = new TableView<>();
+        setupTableView();
+        loadDataFromDatabase();
 
-        // Configurar columna ID
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id_album"));
-
-        // Configurar columna Album
-        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-
-        // Configurar columna Fecha de Lanzamiento
-        fechaColumn.setCellValueFactory(new PropertyValueFactory<>("fecha_lanzamiento"));
-
-        // Configurar columna de imagen
-        imageColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Data, Image>, ObservableValue<Image>>() {
-            @Override
-            public ObservableValue<Image> call(TableColumn.CellDataFeatures<Data, Image> param) {
-                return new ReadOnlyObjectWrapper<>(param.getValue().getImage());
-            }
-        });
-
-        // Personalizar la celda de la imagen
-        imageColumn.setCellFactory(new Callback<TableColumn<Data, Image>, TableCell<Data, Image>>() {
-            @Override
-            public TableCell<Data, Image> call(TableColumn<Data, Image> param) {
-                return new TableCell<Data, Image>() {
-                    @Override
-                    protected void updateItem(Image item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                        } else {
-                            ImageView imageView = new ImageView(item);
-                            imageView.setFitWidth(100);
-                            imageView.setFitHeight(100);
-                            setGraphic(imageView);
-                        }
-                    }
-                };
-            }
-        });
-
-        // Añadir las columnas a la tabla
-        table.getColumns().add(idColumn);
-        table.getColumns().add(albumColumn);
-        table.getColumns().add(fechaColumn);
-        table.getColumns().add(imageColumn);
-
-        // Obtener los datos de la base de datos
-        List<Data> dataList = fetchDataFromDatabase();
-        table.getItems().addAll(dataList);
-
-        // Crear un contenedor VBox y agregar la tabla
-        VBox vbox = new VBox(table);
-        Scene scene = new Scene(vbox);
-
-        // Configurar la escena y la ventana (Stage)
-        this.setTitle("Tabla de Base de Datos");
-        this.setScene(scene);
+        Scene scene = new Scene(tableView, 600, 400);
+        setScene(scene);
         this.show();
     }
 
-    private List<Data> fetchDataFromDatabase() {
-        List<Data> dataList = new ArrayList<>();
-        String query = "SELECT id_album, album, fecha_lanzamiento, imagen FROM album"; // Ajusta el nombre de tu tabla
+    private void setupTableView() {
+        TableColumn<Album, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("idAlbum"));
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        TableColumn<Album, String> albumColumn = new TableColumn<>("Album");
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
 
-            while (rs.next()) {
-                int id_album = rs.getInt("id_album");
-                String album = rs.getString("album");
-                String fecha_lanzamiento = rs.getString("fecha_lanzamiento");
-                Blob blob = rs.getBlob("imagen");
-                Image image = null;
-                if (blob != null) {
-                    image = new Image(blob.getBinaryStream());
-                }
-                dataList.add(new Data(id_album, album, fecha_lanzamiento, image));
-            }
+        TableColumn<Album, String> fechaColumn = new TableColumn<>("Fecha Lanzamiento");
+        fechaColumn.setCellValueFactory(new PropertyValueFactory<>("fechaLanzamiento"));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return dataList;
+        TableColumn<Album, ImageView> imagenColumn = new TableColumn<>("Imagen");
+        imagenColumn.setCellValueFactory(new PropertyValueFactory<>("imagen"));
+
+        tableView.getColumns().addAll(idColumn, albumColumn, fechaColumn, imagenColumn);
     }
 
-    // Asegúrate de que esta clase esté pública y accesible
-    public static class Data {
-        private final Integer id_album;
-        private final String album;
-        private final String fecha_lanzamiento;
-        private final Image image;
+    private void loadDataFromDatabase() {
+        ObservableList<Album> data = FXCollections.observableArrayList();
 
-        public Data(Integer id_album, String album, String fecha_lanzamiento, Image image) {
-            this.id_album = id_album;
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM album")) {
+
+            while (resultSet.next()) {
+                int idAlbum = resultSet.getInt("id_album");
+                String album = resultSet.getString("album");
+                String fechaLanzamiento = resultSet.getString("fecha_lanzamiento");
+                byte[] imagenBytes = resultSet.getBytes("imagen"); // Leer los datos binarios BLOB
+
+                // Convertir byte[] en ImageView
+                ImageView imageView = null;
+                if (imagenBytes != null && imagenBytes.length > 0) {
+                    try {
+                        ByteArrayInputStream inputStream = new ByteArrayInputStream(imagenBytes);
+                        Image image = new Image(inputStream);
+                        imageView = new ImageView(image);
+                        imageView.setFitWidth(100); // Ajusta el ancho de la imagen
+                        imageView.setFitHeight(100); // Ajusta la altura de la imagen
+                        imageView.setPreserveRatio(true); // Mantiene la relación de aspecto
+                    } catch (Exception e) {
+                        System.err.println("Error al cargar la imagen para ID: " + idAlbum);
+                        e.printStackTrace();
+                    }
+                }
+
+                data.add(new Album(idAlbum, album, fechaLanzamiento, imageView));
+            }
+
+            tableView.setItems(data);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class Album {
+        private int idAlbum;
+        private String album;
+        private String fechaLanzamiento;
+        private ImageView imagen;
+
+        public Album(int idAlbum, String album, String fechaLanzamiento, ImageView imagen) {
+            this.idAlbum = idAlbum;
             this.album = album;
-            this.fecha_lanzamiento = fecha_lanzamiento;
-            this.image = image;
+            this.fechaLanzamiento = fechaLanzamiento;
+            this.imagen = imagen;
         }
 
-        public Integer getId_album() {
-            return id_album;
+        public int getIdAlbum() {
+            return idAlbum;
         }
 
         public String getAlbum() {
             return album;
         }
 
-        public String getFecha_lanzamiento() {
-            return fecha_lanzamiento;
+        public String getFechaLanzamiento() {
+            return fechaLanzamiento;
         }
 
-        public Image getImage() {
-            return image;
+        public ImageView getImagen() {
+            return imagen;
         }
     }
 }
+
+

@@ -12,6 +12,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class FormAlbum extends Stage {
     private Scene escena;
@@ -63,45 +66,62 @@ public class FormAlbum extends Stage {
     private void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imágenes", "*.jpg", "*.png", "*.gif"));
-        File selectedFile = fileChooser.showOpenDialog(null);
+        File selectedFile = fileChooser.showOpenDialog(this);
 
         if (selectedFile != null) {
+            // Mostrar la imagen en el ImageView
             Image image = new Image(selectedFile.toURI().toString());
             imvAlbum.setImage(image);
-            objAlbum.setImg_album(image);  // Asignar la imagen seleccionada al objeto
+
+            // Guardar la ruta absoluta de la imagen en AlbumDAO
+            objAlbum.setImg_album(image);
+            objAlbum.setImagePath(selectedFile.getAbsolutePath());
         }
     }
+
 
     private void Guardar() {
         objAlbum.setAlbum(txtalbum.getText());
         objAlbum.setFecha_lanzamiento(txtFechaLanzamiento.getText());
-        objAlbum.setImg_album(imvAlbum.getImage());  // Obtener la imagen del ImageView
 
-        String msj;
-        Alert.AlertType type;
+        String mensaje;
+        Alert.AlertType tipoAlerta;
 
         if (objAlbum.getId_album() > 0) {
-            objAlbum.update();
-            msj = "Registro actualizado";
-            type = Alert.AlertType.INFORMATION;
+            // Implementa la lógica de actualización aquí si es necesario
+            mensaje = "Actualizar aún no está implementado.";
+            tipoAlerta = Alert.AlertType.WARNING;
         } else {
-            if (objAlbum.insert() > 0) {
-                msj = "Registro insertado";
-                type = Alert.AlertType.INFORMATION;
+            // Validar que se haya seleccionado una imagen antes de intentar guardar
+            if (objAlbum.getImagePath() != null && !objAlbum.getImagePath().isEmpty()) {
+                int rowsAffected = objAlbum.insert();
+                if (rowsAffected > 0) {
+                    mensaje = "Registro insertado correctamente.";
+                    tipoAlerta = Alert.AlertType.INFORMATION;
+                } else {
+                    mensaje = "Error al insertar el registro. Revisa la ruta de la imagen.";
+                    tipoAlerta = Alert.AlertType.ERROR;
+                }
             } else {
-                msj = "Ocurrió un error al insertar";
-                type = Alert.AlertType.ERROR;
+                mensaje = "Por favor, selecciona una imagen antes de guardar.";
+                tipoAlerta = Alert.AlertType.WARNING;
             }
         }
 
-        Alert alerta = new Alert(type);
+        // Mostrar mensaje de alerta
+        Alert alerta = new Alert(tipoAlerta);
         alerta.setTitle("Mensaje del Sistema");
-        alerta.setContentText(msj);
+        alerta.setContentText(mensaje);
         alerta.showAndWait();
 
-        //tbvAlbum.setItems(objAlbum.selectAll());  // Refrescar la tabla
+        // Actualizar los datos del TableView
+        tbvAlbum.setItems(objAlbum.selectAll());
         tbvAlbum.refresh();
+
+        // Cerrar el formulario después de guardar
         this.close();
     }
+
+
 
 }

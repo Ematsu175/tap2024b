@@ -21,20 +21,20 @@ public class ButtonCellAlbum extends TableCell<AlbumDAO, String> {
 
     private void EventoVoton(String str) {
         AlbumDAO objAlbum = this.getTableView().getItems().get(this.getIndex());
-        if (str.equals("Editar")){
-            new FormAlbum(this.getTableView(),objAlbum);
-
-        } else{
+        if (str.equals("Editar")) {
+            new FormAlbum(this.getTableView(), objAlbum);
+        } else {
             Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
             alerta.setTitle("Mensaje del sistema");
             alerta.setContentText("¿Deseas eliminar el registro seleccionado?");
             Optional<ButtonType> opcion = alerta.showAndWait();
-            if(opcion.get() == ButtonType.OK){
+            if (opcion.get() == ButtonType.OK) {
                 objAlbum.delete();
                 this.getTableView().setItems(objAlbum.selectAll());
                 this.getTableView().refresh();
             }
         }
+
     }
 
     protected void updateItem(String item, boolean empty){
