@@ -69,11 +69,8 @@ public class FormAlbum extends Stage {
         File selectedFile = fileChooser.showOpenDialog(this);
 
         if (selectedFile != null) {
-            // Mostrar la imagen en el ImageView
             Image image = new Image(selectedFile.toURI().toString());
             imvAlbum.setImage(image);
-
-            // Guardar la ruta absoluta de la imagen en AlbumDAO
             objAlbum.setImg_album(image);
             objAlbum.setImagePath(selectedFile.getAbsolutePath());
         }
@@ -88,7 +85,6 @@ public class FormAlbum extends Stage {
         Alert.AlertType tipoAlerta;
 
         if (objAlbum.getId_album() > 0) {
-            // Actualizar un registro existente
             int rowsAffected = objAlbum.update();
             if (rowsAffected > 0) {
                 mensaje = "Registro actualizado correctamente.";
@@ -98,7 +94,6 @@ public class FormAlbum extends Stage {
                 tipoAlerta = Alert.AlertType.ERROR;
             }
         } else {
-            // Insertar un nuevo registro
             if (objAlbum.getImagePath() != null && !objAlbum.getImagePath().isEmpty()) {
                 int rowsAffected = objAlbum.insert();
                 if (rowsAffected > 0) {
@@ -114,17 +109,14 @@ public class FormAlbum extends Stage {
             }
         }
 
-        // Mostrar mensaje de alerta
         Alert alerta = new Alert(tipoAlerta);
         alerta.setTitle("Mensaje del Sistema");
         alerta.setContentText(mensaje);
         alerta.showAndWait();
 
-        // Actualizar los datos del TableView
         tbvAlbum.setItems(objAlbum.selectAll());
         tbvAlbum.refresh();
 
-        // Cerrar el formulario
         this.close();
     }
 

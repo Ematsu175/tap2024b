@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class AlbumDAO {
-    // Propiedades
     private int id_album;
     private String album;
     private String fecha_lanzamiento;
@@ -46,25 +45,23 @@ public class AlbumDAO {
     public Image getImg_album() { return img_album; }
     public void setImg_album(Image img_album) { this.img_album = img_album; }
 
-    // Insertar un álbum con imagen
     public int insert() {
         int rowCount = 0;
 
         try {
-            // Construcción de la consulta SQL
             String query = "INSERT INTO album (album, fecha_lanzamiento, imagen) VALUES (?, ?, ?)";
 
             try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
-                stmt.setString(1, this.album); // Nombre del álbum
-                stmt.setString(2, this.fecha_lanzamiento); // Fecha de lanzamiento
+                stmt.setString(1, this.album);
+                stmt.setString(2, this.fecha_lanzamiento);
 
                 // Leer los datos de la imagen como bytes
                 if (this.imagePath != null) {
                     File file = new File(this.imagePath);
                     FileInputStream fis = new FileInputStream(file);
-                    stmt.setBinaryStream(3, fis, (int) file.length()); // Insertar los datos binarios de la imagen
+                    stmt.setBinaryStream(3, fis, (int) file.length());
                 } else {
-                    stmt.setNull(3, java.sql.Types.BLOB); // Si no hay imagen, insertar NULL
+                    stmt.setNull(3, java.sql.Types.BLOB);
                 }
 
                 rowCount = stmt.executeUpdate();
@@ -80,23 +77,21 @@ public class AlbumDAO {
         int rowCount = 0;
 
         try {
-            // Construcción de la consulta SQL
             String query = "UPDATE album SET album = ?, fecha_lanzamiento = ?, imagen = ? WHERE id_album = ?";
 
             try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
-                stmt.setString(1, this.album); // Nombre del álbum
-                stmt.setString(2, this.fecha_lanzamiento); // Fecha de lanzamiento
+                stmt.setString(1, this.album);
+                stmt.setString(2, this.fecha_lanzamiento);
 
-                // Leer los datos de la imagen como bytes si se proporcionó una nueva imagen
                 if (this.imagePath != null) {
                     File file = new File(this.imagePath);
                     FileInputStream fis = new FileInputStream(file);
-                    stmt.setBinaryStream(3, fis, (int) file.length()); // Insertar los datos binarios de la imagen
+                    stmt.setBinaryStream(3, fis, (int) file.length());
                 } else {
-                    stmt.setNull(3, java.sql.Types.BLOB); // Si no hay nueva imagen, insertar NULL
+                    stmt.setNull(3, java.sql.Types.BLOB);
                 }
 
-                stmt.setInt(4, this.id_album); // ID del álbum a actualizar
+                stmt.setInt(4, this.id_album);
 
                 rowCount = stmt.executeUpdate();
             }
@@ -107,9 +102,6 @@ public class AlbumDAO {
         return rowCount;
     }
 
-
-
-    // Eliminar un álbum
     public void delete() {
         String query = "DELETE FROM album WHERE id_album = ?";
         try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
@@ -119,8 +111,6 @@ public class AlbumDAO {
             e.printStackTrace();
         }
     }
-
-    // Seleccionar todos los álbumes
     public ObservableList<AlbumDAO> selectAll() {
         ObservableList<AlbumDAO> listaAlb = FXCollections.observableArrayList();
         String query = "SELECT * FROM album";
@@ -155,8 +145,6 @@ public class AlbumDAO {
 
         return listaAlb;
     }
-
-
 
 }
 
