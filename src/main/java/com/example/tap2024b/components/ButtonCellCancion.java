@@ -20,6 +20,9 @@ public ButtonCellCancion(String str){
 
 private void EventoVoton(String str) {
         CancionDAO objCancion = this.getTableView().getItems().get(this.getIndex());
+        if (str.equals("Añadir")){
+
+        }
         if (str.equals("Editar")){
         new FormCancion(this.getTableView(),objCancion);
 

@@ -110,7 +110,24 @@ public class ClienteDAO {
 
     }
 
-    public boolean RealizarLogin(String email, String pass){
+    public int RealizarLogin(String email, String pass) {
+        String query = "SELECT id_cliente FROM cliente WHERE email = ? AND contrasena = ?";
+        try {
+            PreparedStatement stm = Conexion.connection.prepareStatement(query);
+            stm.setString(1, email);
+            stm.setString(2, pass);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_cliente"); // Retornar el ID del cliente autenticado
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1; // Retorna -1 si no se encuentra el usuario
+    }
+
+
+    /*public boolean RealizarLogin(String email, String pass){
         String query = "SELECT * FROM cliente WHERE email = ? AND contrasena = ?";
         ObservableList<ClienteDAO> listaC = FXCollections.observableArrayList();
         try {
@@ -124,5 +141,5 @@ public class ClienteDAO {
         }
         return false;
 
-    }
+    }*/
 }
