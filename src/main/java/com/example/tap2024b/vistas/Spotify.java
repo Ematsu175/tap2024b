@@ -86,37 +86,4 @@ public class Spotify extends Stage {
         }
     }
 
-
-    /*public void IniciarSesion(){
-        String correo = txtUsuario.getText();
-        String pass = txtPass.getText();
-        Label lblMensaje=new Label();
-        ClienteDAO obj = new ClienteDAO();
-
-        if (correo.isEmpty() || pass.isEmpty()) {
-            lblMensaje.setText("Por favor ingresa usuario y contraseña");
-            System.out.println("Ingresa usuario contraseña");
-            return;
-        }
-        if (obj.RealizarLogin(correo, pass)) {
-            lblMensaje.setText("¡Login exitoso!");
-            System.out.println("Login exitoso");
-            if (correo.equals("emanuel@gmail.com")){
-                SpotifyAdmin spa = new SpotifyAdmin();
-                spa.show();
-                Stage ventanaActual = (Stage) btnLogin.getScene().getWindow();
-                ventanaActual.close();
-            } else {
-                SpotifyUsuario spu = new SpotifyUsuario();
-                spu.show();
-                Stage ventanaActual = (Stage) btnLogin.getScene().getWindow();
-                ventanaActual.close();
-            }
-        } else {
-            lblMensaje.setText("Usuario o contraseña incorrectos");
-            System.out.println("Usuario o contraseña incorrectos");
-        }
-
-    }*/
-
 }

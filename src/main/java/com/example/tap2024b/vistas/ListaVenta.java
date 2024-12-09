@@ -162,16 +162,13 @@ public class ListaVenta extends Stage {
         TableColumn<VentaDAO, Float> tbcMonto = new TableColumn<>("Monto");
         tbcMonto.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        TableColumn<VentaDAO, Float> tbcTotal = new TableColumn<>("Total");
-        tbcTotal.setCellValueFactory(new PropertyValueFactory<>("total")); // Mostrar total al lado
-
-        tbvDetalles.getColumns().addAll(tbcCancion, tbcMonto, tbcTotal);
+        tbvDetalles.getColumns().addAll(tbcCancion, tbcMonto);
 
         // Evento para cargar los detalles y calcular el total
         tbvHistorial.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 tbvDetalles.setItems(obtenerDetallesCompra(newSelection.getId_venta()));
-                calcularTotal(tbvDetalles);
+                agregarFilaTotal(tbvDetalles);
             }
         });
 
@@ -182,7 +179,8 @@ public class ListaVenta extends Stage {
         ventanaHistorial.show();
     }
 
-    private void calcularTotal(TableView<VentaDAO> tbvDetalles) {
+
+    private void agregarFilaTotal(TableView<VentaDAO> tbvDetalles) {
         float total = 0;
 
         for (VentaDAO detalle : tbvDetalles.getItems()) {
@@ -194,8 +192,12 @@ public class ListaVenta extends Stage {
         totalRow.setCancion("Total"); // Etiqueta para identificar el total
         totalRow.setCosto(total);
 
-        tbvDetalles.getItems().add(totalRow); // Agregar la fila del total al final
+        // Asegurarse de que la fila de total esté al final
+        ObservableList<VentaDAO> items = FXCollections.observableArrayList(tbvDetalles.getItems());
+        items.add(totalRow);
+        tbvDetalles.setItems(items);
     }
+
 
 
 

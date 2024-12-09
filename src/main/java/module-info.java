@@ -10,5 +10,6 @@ module com.example.tap2024b {
     requires org.kordamp.bootstrapfx.core;
     requires mysql.connector.j;
     requires java.sql;
+    requires itextpdf;
     opens com.example.tap2024b.models;
 }
