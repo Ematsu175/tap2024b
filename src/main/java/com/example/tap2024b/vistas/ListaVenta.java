@@ -104,17 +104,16 @@ public class ListaVenta extends Stage {
         TableColumn<VentaDAO, Float> tbcCostoCarrito = new TableColumn<>("Costo");
         tbcCostoCarrito.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        TableColumn<VentaDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
-        tbcEliminar.setCellFactory(new Callback<TableColumn<VentaDAO, String>, TableCell<VentaDAO, String>>() {
-            @Override
-            public TableCell<VentaDAO, String> call(TableColumn<VentaDAO, String> ventaDAOStringTableColumn) {
-                return new ButtonCellVenta("Eliminar", carrito);
-            }
-        });
+        TableColumn<VentaDAO, Float> tbcTotal = new TableColumn<>("Total");
+        tbcTotal.setCellValueFactory(new PropertyValueFactory<>("costo")); // O usa otro atributo calculado si es necesario
 
-        tbvCarrito.getColumns().addAll(tbcCancionCarrito, tbcCostoCarrito, tbcEliminar);
+        TableColumn<VentaDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
+        tbcEliminar.setCellFactory(col -> new ButtonCellVenta("Eliminar", carrito));
+
+        tbvCarrito.getColumns().addAll(tbcCancionCarrito, tbcCostoCarrito, tbcTotal, tbcEliminar);
         tbvCarrito.setItems(carrito);
     }
+
 
     private void realizarCompra() {
         if (carrito.isEmpty()) {
@@ -163,11 +162,16 @@ public class ListaVenta extends Stage {
         TableColumn<VentaDAO, Float> tbcMonto = new TableColumn<>("Monto");
         tbcMonto.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        tbvDetalles.getColumns().addAll(tbcCancion, tbcMonto);
+        TableColumn<VentaDAO, Float> tbcTotal = new TableColumn<>("Total");
+        tbcTotal.setCellValueFactory(new PropertyValueFactory<>("total")); // Mostrar total al lado
 
+        tbvDetalles.getColumns().addAll(tbcCancion, tbcMonto, tbcTotal);
+
+        // Evento para cargar los detalles y calcular el total
         tbvHistorial.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 tbvDetalles.setItems(obtenerDetallesCompra(newSelection.getId_venta()));
+                calcularTotal(tbvDetalles);
             }
         });
 
@@ -178,9 +182,30 @@ public class ListaVenta extends Stage {
         ventanaHistorial.show();
     }
 
+    private void calcularTotal(TableView<VentaDAO> tbvDetalles) {
+        float total = 0;
+
+        for (VentaDAO detalle : tbvDetalles.getItems()) {
+            total += detalle.getCosto();
+        }
+
+        // Agregar una fila especial para mostrar el total
+        VentaDAO totalRow = new VentaDAO();
+        totalRow.setCancion("Total"); // Etiqueta para identificar el total
+        totalRow.setCosto(total);
+
+        tbvDetalles.getItems().add(totalRow); // Agregar la fila del total al final
+    }
+
+
+
     private ObservableList<VentaDAO> obtenerHistorialCompras() {
         ObservableList<VentaDAO> historial = FXCollections.observableArrayList();
-        String query = "SELECT id_venta, fecha FROM venta WHERE id_cliente = ?";
+        String query = "SELECT v.id_venta, v.fecha, SUM(vd.monto_total) as total " +
+                "FROM venta v " +
+                "JOIN venta_detalle vd ON v.id_venta = vd.id_venta " +
+                "WHERE v.id_cliente = ? " +
+                "GROUP BY v.id_venta, v.fecha";
         try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
             stmt.setInt(1, UsuarioSesion.getIdCliente());
             ResultSet rs = stmt.executeQuery();
@@ -188,6 +213,7 @@ public class ListaVenta extends Stage {
                 VentaDAO venta = new VentaDAO();
                 venta.setId_venta(rs.getInt("id_venta"));
                 venta.setFecha(rs.getString("fecha"));
+                venta.setTotal(rs.getFloat("total")); // Asume que existe el atributo "total" en VentaDAO
                 historial.add(venta);
             }
         } catch (Exception e) {
@@ -195,6 +221,7 @@ public class ListaVenta extends Stage {
         }
         return historial;
     }
+
 
     private ObservableList<VentaDAO> obtenerDetallesCompra(int idVenta) {
         ObservableList<VentaDAO> detalles = FXCollections.observableArrayList();

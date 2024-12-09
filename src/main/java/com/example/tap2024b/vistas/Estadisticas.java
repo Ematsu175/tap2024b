@@ -13,12 +13,10 @@ public class Estadisticas extends Stage {
     public Estadisticas() {
         VBox vbox = new VBox();
 
-        // Crear los gráficos
         BarChart<String, Number> ventasMes = crearGraficaVentasMes();
         BarChart<String, Number> artistasMasVendidos = crearGraficaArtistasMasVendidos();
         PieChart cancionesMasVendidas = crearGraficaCancionesMasVendidas();
 
-        // Configurar la disposición
         vbox.getChildren().addAll(ventasMes, artistasMasVendidos, cancionesMasVendidas);
         Scene escena = new Scene(vbox, 800, 600);
 

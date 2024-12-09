@@ -17,6 +17,15 @@ public class VentaDAO {
 
     private int id_venta;
     private String fecha;
+    private float total;
+
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
 
     public int getId_venta() {
         return id_venta;
@@ -173,6 +182,7 @@ public class VentaDAO {
 
         return listaVen;
     }
+
 
     @Override
     public String toString() {
