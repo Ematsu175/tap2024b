@@ -6,6 +6,12 @@ import com.example.tap2024b.models.CancionDAO;
 import com.example.tap2024b.models.ClienteDAO;
 import com.example.tap2024b.models.Conexion;
 import com.example.tap2024b.models.VentaDAO;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -17,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.FileOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -26,8 +33,8 @@ public class ListaVenta extends Stage {
     private ToolBar tlbMenu;
     private VBox vBox;
     private Scene escena;
-    private TableView<VentaDAO> tbvCarrito; // Tabla para el carrito
-    private ObservableList<VentaDAO> carrito; // Lista del carrito
+    private TableView<VentaDAO> tbvCarrito;
+    private ObservableList<VentaDAO> carrito;
     private Button btnComprar;
     private VentaDAO v = new VentaDAO();
 
@@ -44,11 +51,9 @@ public class ListaVenta extends Stage {
     private void CrearUI() {
         tlbMenu = new ToolBar();
 
-        // Botón para ver historial de compras
         Button btnHistorial = new Button("Ver Historial");
         btnHistorial.setOnAction(event -> mostrarHistorialCompras());
 
-        // Botón para ver datos personales
         Button btnDatosPersonales = new Button("Datos Personales");
         btnDatosPersonales.setOnAction(event -> mostrarDatosPersonales());
 
@@ -69,30 +74,23 @@ public class ListaVenta extends Stage {
     private void CrearTable() {
         VentaDAO objVen = new VentaDAO();
 
-        // Columna para el nombre de la canción
         TableColumn<VentaDAO, String> tbcCancion = new TableColumn<>("Canción");
         tbcCancion.setCellValueFactory(new PropertyValueFactory<>("cancion"));
 
-        // Columna para la duración
         TableColumn<VentaDAO, String> tbcDuracion = new TableColumn<>("Duración");
         tbcDuracion.setCellValueFactory(new PropertyValueFactory<>("duracion"));
 
-        // Columna para el costo
         TableColumn<VentaDAO, Float> tbcCosto = new TableColumn<>("Costo");
         tbcCosto.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        // Columna para el nombre del género
         TableColumn<VentaDAO, String> tbcGenero = new TableColumn<>("Género");
         tbcGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
-        // Columna para editar
         TableColumn<VentaDAO, String> tbcAdd = new TableColumn<>("Editar");
         tbcAdd.setCellFactory(col -> new ButtonCellVenta("Añadir", carrito));
 
-        // Agregar columnas al TableView
         tbvVenta.getColumns().addAll(tbcCancion, tbcDuracion, tbcCosto, tbcGenero, tbcAdd);
 
-        // Configurar los datos iniciales
         tbvVenta.setItems(objVen.selectAll());
     }
 
@@ -104,16 +102,54 @@ public class ListaVenta extends Stage {
         TableColumn<VentaDAO, Float> tbcCostoCarrito = new TableColumn<>("Costo");
         tbcCostoCarrito.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        TableColumn<VentaDAO, Float> tbcTotal = new TableColumn<>("Total");
-        tbcTotal.setCellValueFactory(new PropertyValueFactory<>("costo")); // O usa otro atributo calculado si es necesario
-
         TableColumn<VentaDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
-        tbcEliminar.setCellFactory(col -> new ButtonCellVenta("Eliminar", carrito));
+        tbcEliminar.setCellFactory(col -> new TableCell<>() {
+            private final Button btnEliminar = new Button("Eliminar");
 
-        tbvCarrito.getColumns().addAll(tbcCancionCarrito, tbcCostoCarrito, tbcTotal, tbcEliminar);
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                VentaDAO venta = (VentaDAO) getTableRow().getItem();
+
+                if ("Total".equals(venta.getCancion())) {
+                    setGraphic(null);
+                } else {
+                    btnEliminar.setOnAction(event -> {
+                        carrito.remove(venta);
+                    });
+                    setGraphic(btnEliminar);
+                }
+            }
+        });
+
+        tbvCarrito.getColumns().addAll(tbcCancionCarrito, tbcCostoCarrito, tbcEliminar);
         tbvCarrito.setItems(carrito);
+
+        carrito.addListener((javafx.collections.ListChangeListener<VentaDAO>) change -> actualizarTotalCarrito());
     }
 
+
+    private void actualizarTotalCarrito() {
+        float total = 0;
+        for (VentaDAO venta : carrito) {
+            total += venta.getCosto();
+        }
+
+        VentaDAO totalRow = new VentaDAO();
+        totalRow.setCancion("Total");
+        totalRow.setCosto(total);
+
+        ObservableList<VentaDAO> updatedCarrito = FXCollections.observableArrayList(carrito);
+        updatedCarrito.add(totalRow);
+
+        tbvCarrito.setItems(updatedCarrito);
+    }
 
     private void realizarCompra() {
         if (carrito.isEmpty()) {
@@ -122,18 +158,18 @@ public class ListaVenta extends Stage {
             return;
         }
 
-        // Insertar en la tabla `venta`
         int idVenta = v.insertarVenta();
 
         if (idVenta > 0) {
-            // Insertar en `venta_detalle`
             for (VentaDAO cancion : carrito) {
                 v.insertarDetalle(idVenta, cancion.getId_cancion(), cancion.getCosto());
             }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Compra realizada con éxito.");
+            generarOrdenCompraPDF(idVenta);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Compra realizada con éxito. Se ha generado el PDF de la orden de compra.");
             alert.showAndWait();
-            carrito.clear(); // Limpiar carrito después de la compra
+            carrito.clear();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error al realizar la compra.");
             alert.showAndWait();
@@ -145,7 +181,6 @@ public class ListaVenta extends Stage {
         TableView<VentaDAO> tbvHistorial = new TableView<>();
         TableView<VentaDAO> tbvDetalles = new TableView<>();
 
-        // Configurar columnas para las compras
         TableColumn<VentaDAO, Integer> tbcIdVenta = new TableColumn<>("ID Venta");
         tbcIdVenta.setCellValueFactory(new PropertyValueFactory<>("id_venta"));
 
@@ -155,7 +190,6 @@ public class ListaVenta extends Stage {
         tbvHistorial.getColumns().addAll(tbcIdVenta, tbcFecha);
         tbvHistorial.setItems(obtenerHistorialCompras());
 
-        // Configurar columnas para los detalles
         TableColumn<VentaDAO, String> tbcCancion = new TableColumn<>("Canción");
         tbcCancion.setCellValueFactory(new PropertyValueFactory<>("cancion"));
 
@@ -164,7 +198,6 @@ public class ListaVenta extends Stage {
 
         tbvDetalles.getColumns().addAll(tbcCancion, tbcMonto);
 
-        // Evento para cargar los detalles y calcular el total
         tbvHistorial.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 tbvDetalles.setItems(obtenerDetallesCompra(newSelection.getId_venta()));
@@ -187,12 +220,10 @@ public class ListaVenta extends Stage {
             total += detalle.getCosto();
         }
 
-        // Agregar una fila especial para mostrar el total
         VentaDAO totalRow = new VentaDAO();
-        totalRow.setCancion("Total"); // Etiqueta para identificar el total
+        totalRow.setCancion("Total");
         totalRow.setCosto(total);
 
-        // Asegurarse de que la fila de total esté al final
         ObservableList<VentaDAO> items = FXCollections.observableArrayList(tbvDetalles.getItems());
         items.add(totalRow);
         tbvDetalles.setItems(items);
@@ -224,7 +255,6 @@ public class ListaVenta extends Stage {
         return historial;
     }
 
-
     private ObservableList<VentaDAO> obtenerDetallesCompra(int idVenta) {
         ObservableList<VentaDAO> detalles = FXCollections.observableArrayList();
         String query = "SELECT c.cancion, vd.monto_total FROM venta_detalle vd " +
@@ -247,10 +277,8 @@ public class ListaVenta extends Stage {
     private void mostrarDatosPersonales() {
         Stage ventanaDatos = new Stage();
 
-        // Obtener datos del usuario
         ClienteDAO cliente = obtenerDatosPersonales();
 
-        // Crear elementos visuales
         Label lblNombre = new Label("Nombre: " + cliente.getNombre());
         Label lblEmail = new Label("Email: " + cliente.getEmail());
         Label lblTelefono = new Label("Teléfono: " + cliente.getTelefono());
@@ -281,5 +309,63 @@ public class ListaVenta extends Stage {
         }
         return cliente;
     }
+
+    private void generarOrdenCompraPDF(int idVenta) {
+        Document document = new Document();
+
+        try {
+            String filePath = "C:/Users/emyva/Downloads/orden_compra_" + idVenta + ".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+
+            Paragraph title = new Paragraph("Orden de Compra");
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            document.add(new Paragraph("\n"));
+
+            ClienteDAO cliente = obtenerDatosPersonales();
+            document.add(new Paragraph("Cliente: " + cliente.getNombre()));
+            document.add(new Paragraph("Email: " + cliente.getEmail()));
+            document.add(new Paragraph("Teléfono: " + cliente.getTelefono()));
+            document.add(new Paragraph("\n"));
+
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+
+            PdfPCell header1 = new PdfPCell(new Paragraph("Canción"));
+            PdfPCell header2 = new PdfPCell(new Paragraph("Monto"));
+            table.addCell(header1);
+            table.addCell(header2);
+
+            ObservableList<VentaDAO> detalles = obtenerDetallesCompra(idVenta);
+            float total = 0;
+
+            for (VentaDAO detalle : detalles) {
+                table.addCell(detalle.getCancion());
+                table.addCell(String.valueOf(detalle.getCosto()));
+                total += detalle.getCosto();
+            }
+
+            PdfPCell totalCell = new PdfPCell(new Paragraph("Total"));
+            totalCell.setColspan(1);
+            totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            table.addCell(totalCell);
+            table.addCell(String.valueOf(total));
+
+            document.add(table);
+
+            document.add(new Paragraph("\nGracias por su compra."));
+            System.out.println("PDF generado correctamente: " + filePath);
+
+        } catch (Exception e) {
+            System.err.println("Error al generar el PDF: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            document.close();
+        }
+    }
+
+
 
 }

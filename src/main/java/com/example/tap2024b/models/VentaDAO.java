@@ -164,14 +164,12 @@ public class VentaDAO {
             while (res.next()) {
                 VentaDAO objVen = new VentaDAO();
 
-                // Asignar valores desde el ResultSet
                 objVen.setId_cancion(res.getInt("id_cancion"));  // ID de la canción
                 objVen.setCancion(res.getString("cancion"));     // Nombre de la canción
                 objVen.setDuracion(res.getString("duracion"));   // Duración
                 objVen.setCosto(res.getFloat("costo"));          // Costo
                 objVen.setId_genero(res.getInt("id_genero"));    // ID del género
 
-                // Opcional: podrías agregar un campo extra si deseas mostrar el nombre del género en un `ComboBox`
                 objVen.setNombreGenero(res.getString("genero"));
 
                 listaVen.add(objVen);
