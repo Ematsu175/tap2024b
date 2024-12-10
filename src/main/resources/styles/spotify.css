@@ -1,0 +1,134 @@
+/* Fondo degradado para el contenedor principal */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #008000, #000000); /* Fondo degradado verde a negro */
+}
+/* Fondo degradado para el contenedor principal */
+
+
+/* Fondo transparente para la tabla */
+.transparent-table {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent; /* Fondo interno */
+    -fx-table-cell-border-color: transparent; /* Bordes de las celdas */
+    -fx-border-color: transparent;
+}
+
+/* Texto blanco en las celdas */
+.transparent-table .text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Fondo negro para el encabezado de la tabla */
+.custom-table .column-header-background {
+    -fx-background-color: black; /* Fondo negro */
+}
+
+/* Estilo para las etiquetas del encabezado */
+.custom-table .column-header .label {
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-weight: bold; /* Texto en negritas */
+    -fx-alignment: center; /* Centrar texto */
+}
+
+/* Asegúrate de estilizar directamente el encabezado */
+.custom-table .column-header {
+    -fx-background-color: black; /* Fondo negro */
+    -fx-border-color: transparent;
+}
+
+/* Botón amarillo para Editar */
+.button-edit {
+    -fx-background-color: yellow;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+/* Botón rojo para Eliminar */
+.button-delete {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+/* Cambios al pasar el mouse por encima */
+.button-edit:hover {
+    -fx-background-color: darkorange;
+}
+
+.button-delete:hover {
+    -fx-background-color: darkred;
+}
+
+/* Botón de agregar */
+.add-button {
+    -fx-background-color: linear-gradient(to bottom, #28a745, #218838); /* Degradado verde */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-border-color: #1e7e34; /* Borde verde oscuro */
+    -fx-border-radius: 5; /* Bordes redondeados */
+    -fx-background-radius: 5; /* Fondo redondeado */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-cursor: hand; /* Cursor en forma de mano */
+}
+
+.add-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #218838, #1c7430); /* Efecto hover */
+}
+
+/* Fondo del ToolBar */
+.toolbar-background {
+    -fx-background-color: linear-gradient(to right, #f8f9fa, #e9ecef); /* Degradado claro */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-border-color: #ced4da; /* Borde gris */
+    -fx-border-width: 1; /* Grosor del borde */
+}
+
+/* Estilo para las filas vacías */
+.table-row-cell:empty {
+    -fx-background-color: transparent; /* Fondo transparente */
+}
+
+/* Fondo negro para el MenuBar */
+.menu-bar {
+    -fx-background-color: black; /* Fondo negro */
+    -fx-text-fill: green; /* Texto verde */
+    -fx-border-color: transparent;
+    -fx-padding: 5px;
+}
+
+/* Texto verde para los elementos del menú */
+.menu-bar .menu {
+    -fx-text-fill: green; /* Texto verde */
+    -fx-font-size: 14px; /* Tamaño de texto */
+    -fx-font-weight: bold; /* Texto en negritas */
+}
+
+/* Efecto al pasar el mouse por los MenuItems */
+.menu-item {
+    -fx-background-color: transparent; /* Fondo transparente inicialmente */
+    -fx-text-fill: white; /* Texto blanco por defecto */
+    -fx-padding: 10px;
+}
+
+/* Expande los MenuItems al pasar el mouse */
+.menu-item:hover {
+    -fx-background-color: green; /* Fondo verde al pasar el mouse */
+    -fx-text-fill: black; /* Texto negro al pasar el mouse */
+    -fx-scale-x: 1.1; /* Escala horizontal */
+    -fx-scale-y: 1.1; /* Escala vertical */
+    -fx-font-weight: bold; /* Texto en negritas */
+}
+
+/* Estilo para el texto del Menu en el MenuBar */
+.menu-bar .menu {
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-size: 14px; /* Tamaño del texto */
+    -fx-font-weight: bold; /* Texto en negritas */
+}
+

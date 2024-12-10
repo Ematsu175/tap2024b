@@ -19,6 +19,9 @@ public class ButtonCellVenta extends TableCell<VentaDAO, String> {
     public ButtonCellVenta(String str, ObservableList<VentaDAO> carrito) {
         this.carrito = carrito;
         btnCelda = new Button(str);
+        if (str.equals("Añadir")) {
+            btnCelda.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+        }
         btnCelda.setOnAction(event -> EventoVoton(str));
     }
 
@@ -26,23 +29,21 @@ public class ButtonCellVenta extends TableCell<VentaDAO, String> {
         VentaDAO objCancion = this.getTableView().getItems().get(this.getIndex());
         if (str.equals("Añadir")) {
             if (carrito.stream().anyMatch(c -> c.getId_cancion() == objCancion.getId_cancion())) {
-                // Mostrar alerta si la canción ya está en el carrito
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Esta canción ya está en el carrito.");
                 alert.showAndWait();
             } else {
-                carrito.add(objCancion); // Añadir la canción al carrito
+                carrito.add(objCancion);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Canción añadida al carrito.");
                 alert.showAndWait();
             }
         } else if (str.equals("Eliminar")) {
-            // Confirmar eliminación
             Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
             alerta.setTitle("Mensaje del sistema");
             alerta.setContentText("¿Deseas eliminar esta canción del carrito?");
             Optional<ButtonType> opcion = alerta.showAndWait();
             if (opcion.isPresent() && opcion.get() == ButtonType.OK) {
-                carrito.remove(objCancion); // Eliminar del carrito
-                this.getTableView().refresh(); // Refrescar la tabla
+                carrito.remove(objCancion);
+                this.getTableView().refresh();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Canción eliminada del carrito.");
                 alert.showAndWait();
             }

@@ -28,12 +28,13 @@ public class ListaCanciones extends Stage {
         tbvCancion.refresh();
         this.setTitle("Albums");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(50);
         imv.setFitWidth(50);
         Button btnAddAlbum = new Button();
@@ -41,15 +42,15 @@ public class ListaCanciones extends Stage {
             new FormCancion(tbvCancion, null);
         });
         btnAddAlbum.setGraphic(imv);
+        btnAddAlbum.getStyleClass().add("add-button");
 
-        // Agregar botón a la barra de herramientas
         tlbMenu.getItems().add(btnAddAlbum);
+        tlbMenu.getStyleClass().add("toolbar-background");
 
-        // Inicializar el TableView
         tbvCancion = new TableView<>();
         CrearTable();
-
-        // Configurar layout principal
+        tbvCancion.getStyleClass().add("custom-table");
+        tbvCancion.getStyleClass().add("transparent-table");
         vBox = new VBox(tlbMenu, tbvCancion);
         escena = new Scene(vBox, 800, 400);
     }
@@ -57,34 +58,26 @@ public class ListaCanciones extends Stage {
     private void CrearTable() {
         CancionDAO objCan = new CancionDAO();
 
-        // Columna para el nombre de la canción
         TableColumn<CancionDAO, String> tbcCancion = new TableColumn<>("Canción");
         tbcCancion.setCellValueFactory(new PropertyValueFactory<>("cancion"));
 
-        // Columna para la duración
         TableColumn<CancionDAO, String> tbcDuracion = new TableColumn<>("Duración");
         tbcDuracion.setCellValueFactory(new PropertyValueFactory<>("duracion"));
 
-        // Columna para el costo
         TableColumn<CancionDAO, Float> tbcCosto = new TableColumn<>("Costo");
         tbcCosto.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
-        // Columna para el nombre del género
         TableColumn<CancionDAO, String> tbcGenero = new TableColumn<>("Género");
         tbcGenero.setCellValueFactory(new PropertyValueFactory<>("nombreGenero"));
 
-        // Columna para editar
         TableColumn<CancionDAO, String> tbcEditar = new TableColumn<>("Editar");
         tbcEditar.setCellFactory(param -> new ButtonCellCancion("Editar"));
 
-        // Columna para eliminar
         TableColumn<CancionDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
         tbcEliminar.setCellFactory(param -> new ButtonCellCancion("Eliminar"));
 
-        // Agregar columnas al TableView
         tbvCancion.getColumns().addAll(tbcCancion, tbcDuracion, tbcCosto, tbcGenero, tbcEditar, tbcEliminar);
 
-        // Configurar los datos iniciales
         tbvCancion.setItems(objCan.selectAll());
     }
 

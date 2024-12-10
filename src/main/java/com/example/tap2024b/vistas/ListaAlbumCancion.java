@@ -23,24 +23,30 @@ public class ListaAlbumCancion extends Stage {
         CrearUI();
         this.setTitle("Álbumes y Canciones");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(50);
         imv.setFitHeight(50);
 
         Button btnAddRelacion = new Button();
         btnAddRelacion.setOnAction(event -> new FormAlbumCancion(tbvAlbumCancion, null)); // Cambiado a FormAlbumCancion
         btnAddRelacion.setGraphic(imv);
+        btnAddRelacion.getStyleClass().add("add-button");
         tlbMenu.getItems().add(btnAddRelacion);
 
         tbvAlbumCancion = new TableView<>();
         CrearTabla();
 
+        tbvAlbumCancion.getStyleClass().add("custom-table");
+        tbvAlbumCancion.getStyleClass().add("transparent-table");
+
         vBox = new VBox(tlbMenu, tbvAlbumCancion);
+        vBox.getStyleClass().add("green-black-gradient");
         escena = new Scene(vBox, 600, 400);
     }
 

@@ -14,6 +14,11 @@ public class ButtonCellInterprete extends TableCell<InterpreteDao, String> {
 
     public ButtonCellInterprete(String texto) {
         btnCelda = new Button(texto);
+        if (texto.equals("Editar")) {
+            btnCelda.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+        } else if (texto.equals("Eliminar")) {
+            btnCelda.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
         btnCelda.setOnAction(event -> manejarEvento(texto));
     }
 

@@ -23,23 +23,29 @@ public class ListaGenero extends Stage {
         CrearUI();
         this.setTitle("Lista de generos");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(100);
         imv.setFitHeight(100);
         Button btnAddCliente = new Button();
         btnAddCliente.setOnAction(event -> new FormGenero(tbvGenero, null));
         tlbMenu.getItems().add(btnAddCliente);
+        tlbMenu.getStyleClass().add("toolbar-background");
         btnAddCliente.setGraphic(imv);
+        btnAddCliente.getStyleClass().add("add-button");
 
         tbvGenero = new TableView<>();
 
         CrearTable();
+        tbvGenero.getStyleClass().add("custom-table");
+        tbvGenero.getStyleClass().add("transparent-table");
         vBox = new VBox(tlbMenu,tbvGenero);
+        vBox.getStyleClass().add("green-black-gradient");
         escena = new Scene(vBox,500,250);
     }
     private void CrearTable() {

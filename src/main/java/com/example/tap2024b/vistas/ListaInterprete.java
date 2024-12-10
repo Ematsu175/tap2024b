@@ -30,7 +30,7 @@ public class ListaInterprete extends Stage {
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(50);
         imv.setFitHeight(50);
 

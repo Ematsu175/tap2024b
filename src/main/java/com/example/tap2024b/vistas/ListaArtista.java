@@ -22,22 +22,27 @@ public class ListaArtista extends Stage {
         CrearUI();
         this.setTitle("Lista de Artistas");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(50);
         imv.setFitHeight(50);
         Button btnAddCliente = new Button();
         btnAddCliente.setOnAction(event -> new FormArtista(tbvArtista, null));
         tlbMenu.getItems().add(btnAddCliente);
+        tlbMenu.getStyleClass().add("toolbar-background");
         btnAddCliente.setGraphic(imv);
+        btnAddCliente.getStyleClass().add("add-button");
 
         tbvArtista = new TableView<>();
 
         CrearTable();
+        tbvArtista.getStyleClass().add("custom-table");
+        tbvArtista.getStyleClass().add("transparent-table");
         vBox = new VBox(tlbMenu,tbvArtista);
         escena = new Scene(vBox,500,250);
     }

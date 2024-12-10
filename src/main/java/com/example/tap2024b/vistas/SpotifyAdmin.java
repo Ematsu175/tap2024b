@@ -1,11 +1,15 @@
 package com.example.tap2024b.vistas;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SpotifyAdmin extends Stage {
@@ -16,12 +20,12 @@ public class SpotifyAdmin extends Stage {
     private Menu Opciones;
     private MenuItem mitClientes, mitGenero, mitArtistas, mitAlbum, mitPrueba, mitCancion, mitAlbumCancion, mitInterprete, mitEstadisticas, mitcancionArtista;
 
-
-    public SpotifyAdmin(){
+    public SpotifyAdmin() {
         CrearUI();
         this.setTitle("Spotify");
-        escena=new Scene(bdpPrincipal,500,500);
+        escena = new Scene(bdpPrincipal, 500, 500);
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
@@ -57,13 +61,27 @@ public class SpotifyAdmin extends Stage {
         mitcancionArtista.setOnAction(event -> new InformeArtistasCanciones());
 
         Opciones = new Menu("Opciones");
-        Opciones.getItems().addAll(mitClientes, mitGenero, mitArtistas, mitAlbum, mitCancion, mitAlbumCancion, mitInterprete, mitEstadisticas,mitPrueba, mitcancionArtista);
+        Opciones.getItems().addAll(mitClientes, mitGenero, mitArtistas, mitAlbum, mitCancion, mitAlbumCancion, mitInterprete, mitEstadisticas, mitPrueba, mitcancionArtista);
 
         mnbPrincipal = new MenuBar(Opciones);
+        mnbPrincipal.getStyleClass().add("menu-bar");
         bdpPrincipal = new BorderPane();
         bdpPrincipal.setTop(mnbPrincipal);
 
-        lblMensaje = new Label("Bienvenido Admin!");
+        VBox vboxCenter = new VBox();
+        vboxCenter.setAlignment(Pos.CENTER);
+        vboxCenter.setSpacing(10);
 
+        ImageView imageView = new ImageView(new Image(getClass().getResource("/images/spotify.png").toString())); // Cambia la ruta por la imagen correcta
+        imageView.setFitHeight(150);
+        imageView.setFitWidth(150);
+        imageView.setPreserveRatio(true);
+
+        Label lblAdmin = new Label("Administrador");
+        lblAdmin.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        vboxCenter.getChildren().addAll(imageView, lblAdmin);
+
+        bdpPrincipal.setCenter(vboxCenter);
     }
 }

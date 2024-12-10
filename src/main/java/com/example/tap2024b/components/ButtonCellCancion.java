@@ -15,6 +15,11 @@ public class ButtonCellCancion extends TableCell<CancionDAO, String> {
 
 public ButtonCellCancion(String str){
         btnCelda = new Button(str);
+        if (str.equals("Editar")) {
+                btnCelda.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+        } else if (str.equals("Eliminar")) {
+                btnCelda.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
         btnCelda.setOnAction(event -> EventoVoton(str));
         }
 

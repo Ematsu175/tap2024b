@@ -45,30 +45,48 @@ public class ListaVenta extends Stage {
         tbvVenta.refresh();
         this.setTitle("Venta");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-
+        ImageView imv = new ImageView(getClass().getResource("/images/historial.png").toString());
+        imv.setFitHeight(50);
+        imv.setFitHeight(50);
         Button btnHistorial = new Button("Ver Historial");
         btnHistorial.setOnAction(event -> mostrarHistorialCompras());
+        btnHistorial.setGraphic(imv);
 
+        ImageView imv2 = new ImageView(getClass().getResource("/images/userTAP.png").toString());
+        imv2.setFitHeight(50);
+        imv2.setFitHeight(50);
         Button btnDatosPersonales = new Button("Datos Personales");
         btnDatosPersonales.setOnAction(event -> mostrarDatosPersonales());
+        btnDatosPersonales.setGraphic(imv2);
 
         tlbMenu.getItems().addAll(btnHistorial, btnDatosPersonales);
+        tlbMenu.getStyleClass().add("toolbar-background");
 
         tbvVenta = new TableView<>();
         tbvCarrito = new TableView<>();
         carrito = FXCollections.observableArrayList();
         CrearTable();
+        tbvVenta.getStyleClass().add("custom-table");
+        tbvVenta.getStyleClass().add("transparent-table");
         CrearCarrito();
+        tbvCarrito.getStyleClass().add("custom-table");
+        tbvCarrito.getStyleClass().add("transparent-table");
 
+        ImageView imv3 = new ImageView(getClass().getResource("/images/comprar.png").toString());
+        imv3.setFitHeight(50);
+        imv3.setFitHeight(50);
         btnComprar = new Button("Comprar");
         btnComprar.setOnAction(event -> realizarCompra());
+        btnComprar.setGraphic(imv3);
 
         vBox = new VBox(tlbMenu, tbvVenta, tbvCarrito, btnComprar);
+        vBox.getStyleClass().add("green-black-gradient");
         escena = new Scene(vBox, 800, 600);
     }
     private void CrearTable() {
@@ -206,6 +224,7 @@ public class ListaVenta extends Stage {
         });
 
         VBox vbox = new VBox(new Label("Historial de Compras"), tbvHistorial, new Label("Detalles de la Compra"), tbvDetalles);
+
         Scene escena = new Scene(vbox, 600, 400);
         ventanaHistorial.setScene(escena);
         ventanaHistorial.setTitle("Historial de Compras");

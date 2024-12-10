@@ -20,28 +20,34 @@ public class ListaClientes extends Stage {
         CrearUI();
         this.setTitle("Lista de clientes");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
         tlbMenu = new ToolBar();
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         Button btnAddCliente = new Button();
         btnAddCliente.setOnAction(event -> new FormCliente(tbvClientes, null));
         tlbMenu.getItems().add(btnAddCliente);
+        tlbMenu.getStyleClass().add("toolbar-background");
         btnAddCliente.setGraphic(imv);
+        btnAddCliente.getStyleClass().add("add-button");
 
         tbvClientes = new TableView<>();
 
         CrearTable();
+
+        tbvClientes.getStyleClass().add("custom-table");
+        tbvClientes.getStyleClass().add("transparent-table");
         vBox = new VBox(tlbMenu,tbvClientes);
-        escena = new Scene(vBox,500,250);
+        escena = new Scene(vBox,500,500);
     }
 
     private void CrearTable() {
         ClienteDAO objCliente = new ClienteDAO();
 
-        TableColumn<ClienteDAO,String> tbcNombre = new TableColumn<>("Empleado");
+        TableColumn<ClienteDAO,String> tbcNombre = new TableColumn<>("Cliente");
         tbcNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
         TableColumn<ClienteDAO,String> tbcTelefono = new TableColumn<>("Telefono");

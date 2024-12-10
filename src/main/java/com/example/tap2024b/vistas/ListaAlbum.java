@@ -32,49 +32,53 @@ public class ListaAlbum extends Stage {
         tbvAlbum.refresh();
         this.setTitle("Albums");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
     private void CrearUI() {
-        // Creación de la barra de herramientas
         tlbMenu = new ToolBar();
 
-        // Icono del botón "Agregar Álbum"
-        ImageView imv = new ImageView(getClass().getResource("/images/banderaB.png").toString());
+        ImageView imv = new ImageView(getClass().getResource("/images/add.png").toString());
         imv.setFitHeight(50);
         imv.setFitWidth(50);
 
-        // Botón para agregar un nuevo álbum
         Button btnAddAlbum = new Button();
         btnAddAlbum.setOnAction(event -> {
-            new FormAlbum(tbvAlbum, null); // Abre el formulario para insertar un nuevo álbum
+            new FormAlbum(tbvAlbum, null);
         });
         btnAddAlbum.setGraphic(imv);
+        btnAddAlbum.getStyleClass().add("add-button");
 
-        // Agregar botón a la barra de herramientas
         tlbMenu.getItems().add(btnAddAlbum);
+        tlbMenu.getStyleClass().add("toolbar-background");
 
-        // Inicializar el TableView
+
         tbvAlbum = new TableView<>();
+
         CrearTable();
 
-        // Configurar layout principal
+        // Aplica los estilos
+        tbvAlbum.getStyleClass().add("custom-table");
+        tbvAlbum.getStyleClass().add("transparent-table");
+
+
         vBox = new VBox(tlbMenu, tbvAlbum);
+        vBox.getStyleClass().add("green-black-gradient");
+
         escena = new Scene(vBox, 800, 400);
     }
+
 
     private void CrearTable() {
         AlbumDAO objAlbum = new AlbumDAO();
 
-        // Columna para el nombre del álbum
         TableColumn<AlbumDAO, String> tbcAlbum = new TableColumn<>("Álbum");
         tbcAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
 
-        // Columna para la fecha de lanzamiento
         TableColumn<AlbumDAO, String> tbcFechaLanzamiento = new TableColumn<>("Fecha de Lanzamiento");
         tbcFechaLanzamiento.setCellValueFactory(new PropertyValueFactory<>("fecha_lanzamiento"));
 
-        // Columna para la imagen del álbum
         TableColumn<AlbumDAO, Image> tbcImagen = new TableColumn<>("Imagen");
         tbcImagen.setCellFactory(param -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -83,30 +87,26 @@ public class ListaAlbum extends Stage {
             protected void updateItem(Image item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setGraphic(null); // Si no hay imagen, limpia la celda
+                    setGraphic(null);
                 } else {
-                    imageView.setImage(item); // Asigna la imagen al ImageView
-                    imageView.setFitWidth(50); // Ajusta el ancho
-                    imageView.setFitHeight(50); // Ajusta la altura
-                    imageView.setPreserveRatio(true); // Mantén la proporción de la imagen
-                    setGraphic(imageView); // Asigna el ImageView a la celda
+                    imageView.setImage(item);
+                    imageView.setFitWidth(50);
+                    imageView.setFitHeight(50);
+                    imageView.setPreserveRatio(true);
+                    setGraphic(imageView);
                 }
             }
         });
         tbcImagen.setCellValueFactory(new PropertyValueFactory<>("img_album"));
 
-        // Columna para editar el álbum
         TableColumn<AlbumDAO, String> tbcEditar = new TableColumn<>("Editar");
         tbcEditar.setCellFactory(param -> new ButtonCellAlbum("Editar"));
 
-        // Columna para eliminar el álbum
         TableColumn<AlbumDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
         tbcEliminar.setCellFactory(param -> new ButtonCellAlbum("Eliminar"));
 
-        // Agregar columnas al TableView
         tbvAlbum.getColumns().addAll(tbcAlbum, tbcFechaLanzamiento, tbcImagen, tbcEditar, tbcEliminar);
 
-        // Cargar datos desde la base de datos
         CargarDatos();
     }
 
