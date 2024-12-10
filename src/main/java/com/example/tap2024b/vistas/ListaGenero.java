@@ -51,7 +51,6 @@ public class ListaGenero extends Stage {
     private void CrearTable() {
         GeneroDAO objGenero = new GeneroDAO();
 
-        // Columna para mostrar el nombre del género
         TableColumn<GeneroDAO, String> tbcNombre = new TableColumn<>("Genero");
         tbcNombre.setCellValueFactory(new PropertyValueFactory<>("genero"));
 
@@ -63,7 +62,6 @@ public class ListaGenero extends Stage {
             }
         });
 
-        // Columna para el botón Eliminar
         TableColumn<GeneroDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
         tbcEliminar.setCellFactory(new Callback<TableColumn<GeneroDAO, String>, TableCell<GeneroDAO, String>>() {
             @Override
@@ -72,10 +70,8 @@ public class ListaGenero extends Stage {
             }
         });
 
-        // Agregar columnas a la tabla
         tbvGenero.getColumns().addAll(tbcNombre, tbcEditar, tbcEliminar);
 
-        // Configurar datos iniciales
         tbvGenero.setItems(objGenero.selectAll());
     }
 

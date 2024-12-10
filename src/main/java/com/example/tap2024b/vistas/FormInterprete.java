@@ -25,7 +25,6 @@ public class FormInterprete extends Stage {
         if (obj != null) {
             objInterprete = obj;
 
-            // Establece los valores originales
             objInterprete.setOriginalIdArtista(obj.getId_artista());
             objInterprete.setOriginalIdCancion(obj.getId_cancion());
 
@@ -44,8 +43,8 @@ public class FormInterprete extends Stage {
     private void CrearUI() {
         cmbArtista = new ComboBox<>();
         cmbCancion = new ComboBox<>();
-        cargarArtistas(); // Cargar álbumes en el ComboBox
-        cargarCanciones(); // Cargar canciones en el ComboBox
+        cargarArtistas();
+        cargarCanciones();
     }
 
     private VBox CrearLayout() {
@@ -93,13 +92,11 @@ public class FormInterprete extends Stage {
             }
         }
 
-        // Mostrar el mensaje de resultado
         Alert alerta = new Alert(tipoAlerta);
         alerta.setTitle("Resultado");
         alerta.setContentText(mensaje);
         alerta.showAndWait();
 
-        // Actualizar la tabla
         tbvInterprete.setItems(objInterprete.selectAll());
         tbvInterprete.refresh();
         this.close();

@@ -122,14 +122,12 @@ public class CancionDAO {
             while (res.next()) {
                 CancionDAO objCan = new CancionDAO();
 
-                // Asignar valores desde el ResultSet
-                objCan.setId_cancion(res.getInt("id_cancion"));  // ID de la canción
-                objCan.setCancion(res.getString("cancion"));     // Nombre de la canción
-                objCan.setDuracion(res.getString("duracion"));   // Duración
-                objCan.setCosto(res.getFloat("costo"));          // Costo
-                objCan.setId_genero(res.getInt("id_genero"));    // ID del género
+                objCan.setId_cancion(res.getInt("id_cancion"));
+                objCan.setCancion(res.getString("cancion"));
+                objCan.setDuracion(res.getString("duracion"));
+                objCan.setCosto(res.getFloat("costo"));
+                objCan.setId_genero(res.getInt("id_genero"));
 
-                // Opcional: podrías agregar un campo extra si deseas mostrar el nombre del género en un `ComboBox`
                 objCan.setNombreGenero(res.getString("genero"));
 
                 listaCan.add(objCan);
@@ -143,7 +141,7 @@ public class CancionDAO {
 
     @Override
     public String toString() {
-        return this.cancion; // Retorna el nombre de la canción para mostrarlo en el ComboBox
+        return this.cancion;
     }
 
 }

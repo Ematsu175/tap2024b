@@ -60,7 +60,6 @@ public class ListaArtista extends Stage {
             }
         });
 
-        // Columna para el botón Eliminar
         TableColumn<ArtistaDAO, String> tbcEliminar = new TableColumn<>("Eliminar");
         tbcEliminar.setCellFactory(new Callback<TableColumn<ArtistaDAO, String>, TableCell<ArtistaDAO, String>>() {
             @Override
@@ -69,7 +68,6 @@ public class ListaArtista extends Stage {
             }
         });
 
-        // Agregar columnas al TableView
         tbvArtista.getColumns().addAll(tbcArtista, tbcEditar, tbcEliminar);
 
         // Configurar los datos iniciales

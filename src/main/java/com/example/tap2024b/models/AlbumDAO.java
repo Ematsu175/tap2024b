@@ -124,7 +124,6 @@ public class AlbumDAO {
                 objAlb.album = res.getString("album");
                 objAlb.fecha_lanzamiento = res.getString("fecha_lanzamiento");
 
-                // Leer los datos binarios de la imagen
                 InputStream inputStream = res.getBinaryStream("imagen");
                 if (inputStream != null) {
                     try {
@@ -148,7 +147,7 @@ public class AlbumDAO {
 
     @Override
     public String toString() {
-        return this.album; // Retorna el nombre del álbum para mostrarlo en el ComboBox
+        return this.album;
     }
 
 }

@@ -68,8 +68,8 @@ public class AlbumCancionDAO {
         String query = "INSERT INTO album_cancion (id_album, id_cancion) VALUES (?, ?)";
 
         try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
-            stmt.setInt(1, this.id_album); // ID del álbum
-            stmt.setInt(2, this.id_cancion); // ID de la canción
+            stmt.setInt(1, this.id_album);
+            stmt.setInt(2, this.id_cancion);
 
             System.out.println("Insertando relación: id_album=" + this.id_album + ", id_cancion=" + this.id_cancion);
             rowCount = stmt.executeUpdate();
@@ -87,10 +87,10 @@ public class AlbumCancionDAO {
         String query = "UPDATE album_cancion SET id_album = ?, id_cancion = ? WHERE id_album = ? AND id_cancion = ?";
 
         try (PreparedStatement stmt = Conexion.connection.prepareStatement(query)) {
-            stmt.setInt(1, this.id_album); // Nuevo ID del álbum
-            stmt.setInt(2, this.id_cancion); // Nuevo ID de la canción
-            stmt.setInt(3, this.originalIdAlbum); // ID original del álbum
-            stmt.setInt(4, this.originalIdCancion); // ID original de la canción
+            stmt.setInt(1, this.id_album);
+            stmt.setInt(2, this.id_cancion);
+            stmt.setInt(3, this.originalIdAlbum);
+            stmt.setInt(4, this.originalIdCancion);
 
             System.out.println("Actualizando relación: id_album=" + this.originalIdAlbum + ", id_cancion=" + this.originalIdCancion +
                     " -> Nuevo id_album=" + this.id_album + ", Nuevo id_cancion=" + this.id_cancion);

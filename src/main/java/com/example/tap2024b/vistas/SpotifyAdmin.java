@@ -72,7 +72,7 @@ public class SpotifyAdmin extends Stage {
         vboxCenter.setAlignment(Pos.CENTER);
         vboxCenter.setSpacing(10);
 
-        ImageView imageView = new ImageView(new Image(getClass().getResource("/images/spotify.png").toString())); // Cambia la ruta por la imagen correcta
+        ImageView imageView = new ImageView(new Image(getClass().getResource("/images/spotify.png").toString()));
         imageView.setFitHeight(150);
         imageView.setFitWidth(150);
         imageView.setPreserveRatio(true);

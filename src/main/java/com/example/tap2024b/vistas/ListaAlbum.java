@@ -58,7 +58,6 @@ public class ListaAlbum extends Stage {
 
         CrearTable();
 
-        // Aplica los estilos
         tbvAlbum.getStyleClass().add("custom-table");
         tbvAlbum.getStyleClass().add("transparent-table");
 

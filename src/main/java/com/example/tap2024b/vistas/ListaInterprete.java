@@ -25,6 +25,7 @@ public class ListaInterprete extends Stage {
         CrearUI();
         this.setTitle("Interpretacion");
         this.setScene(escena);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
         this.show();
     }
 
@@ -38,11 +39,14 @@ public class ListaInterprete extends Stage {
         btnAddRelacion.setOnAction(event -> new FormInterprete(tbvInterprete, null)); // Cambiado a FormAlbumCancion
         btnAddRelacion.setGraphic(imv);
         tlbMenu.getItems().add(btnAddRelacion);
-
+        tlbMenu.getStyleClass().add("toolbar-background");
+        btnAddRelacion.getStyleClass().add("add-button");
         tbvInterprete = new TableView<>();
         CrearTabla();
 
         vBox = new VBox(tlbMenu, tbvInterprete);
+        tbvInterprete.getStyleClass().add("custom-table");
+        tbvInterprete.getStyleClass().add("transparent-table");
         escena = new Scene(vBox, 600, 400);
     }
 

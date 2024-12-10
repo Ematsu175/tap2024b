@@ -62,7 +62,7 @@ public class Spotify extends Stage {
             return;
         }
 
-        int idCliente = obj.RealizarLogin(correo, pass); // Obtiene el ID del cliente
+        int idCliente = obj.RealizarLogin(correo, pass);
         if (idCliente != -1) {
             lblMensaje.setText("¡Login exitoso!");
             System.out.println("Login exitoso");

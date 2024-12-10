@@ -32,21 +32,18 @@ public class InformeArtistasCanciones {
             document.open();
             System.out.println("Documento abierto.");
 
-            // Agregar título al reporte
             Paragraph title = new Paragraph("Reporte de Artistas y Canciones");
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            document.add(new Paragraph("\n")); // Espacio en blanco
+            document.add(new Paragraph("\n"));
 
-            // Crear tabla para los datos
-            PdfPTable table = new PdfPTable(2); // 2 columnas: Artista y Canción
+            PdfPTable table = new PdfPTable(2);
             table.setWidthPercentage(100);
             PdfPCell header1 = new PdfPCell(new Paragraph("Artista"));
             PdfPCell header2 = new PdfPCell(new Paragraph("Canción"));
             table.addCell(header1);
             table.addCell(header2);
 
-            // Llenar la tabla con datos
             Map<String, String> artistasCanciones = obtenerArtistasYCanciones();
             for (Map.Entry<String, String> entry : artistasCanciones.entrySet()) {
                 table.addCell(entry.getKey());

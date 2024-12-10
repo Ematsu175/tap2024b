@@ -17,14 +17,12 @@ public class ButtonCellAlbum extends TableCell<AlbumDAO, String> {
     public ButtonCellAlbum(String str) {
         btnCelda = new Button(str);
 
-        // Estilo del botón según su texto
         if (str.equals("Editar")) {
             btnCelda.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
         } else if (str.equals("Eliminar")) {
             btnCelda.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
         }
 
-        // Evento del botón
         btnCelda.setOnAction(event -> EventoVoton(str));
     }
 

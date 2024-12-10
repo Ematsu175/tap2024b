@@ -108,7 +108,8 @@ public class ListaVenta extends Stage {
         tbcAdd.setCellFactory(col -> new ButtonCellVenta("Añadir", carrito));
 
         tbvVenta.getColumns().addAll(tbcCancion, tbcDuracion, tbcCosto, tbcGenero, tbcAdd);
-
+        tbvVenta.getStyleClass().add("custom-table");
+        tbvVenta.getStyleClass().add("transparent-table");
         tbvVenta.setItems(objVen.selectAll());
     }
 
@@ -148,7 +149,8 @@ public class ListaVenta extends Stage {
 
         tbvCarrito.getColumns().addAll(tbcCancionCarrito, tbcCostoCarrito, tbcEliminar);
         tbvCarrito.setItems(carrito);
-
+        tbvCarrito.getStyleClass().add("custom-table");
+        tbvCarrito.getStyleClass().add("transparent-table");
         carrito.addListener((javafx.collections.ListChangeListener<VentaDAO>) change -> actualizarTotalCarrito());
     }
 
@@ -226,6 +228,10 @@ public class ListaVenta extends Stage {
         VBox vbox = new VBox(new Label("Historial de Compras"), tbvHistorial, new Label("Detalles de la Compra"), tbvDetalles);
 
         Scene escena = new Scene(vbox, 600, 400);
+        escena.getStylesheets().add(getClass().getResource("/styles/spotify.css").toExternalForm());
+        tbvHistorial.getStyleClass().add("custom-table");
+        tbvHistorial.getStyleClass().add("transparent-table");
+        vBox.getStyleClass().add("green-black-gradient");
         ventanaHistorial.setScene(escena);
         ventanaHistorial.setTitle("Historial de Compras");
         ventanaHistorial.show();
@@ -248,9 +254,6 @@ public class ListaVenta extends Stage {
         tbvDetalles.setItems(items);
     }
 
-
-
-
     private ObservableList<VentaDAO> obtenerHistorialCompras() {
         ObservableList<VentaDAO> historial = FXCollections.observableArrayList();
         String query = "SELECT v.id_venta, v.fecha, SUM(vd.monto_total) as total " +
@@ -265,7 +268,7 @@ public class ListaVenta extends Stage {
                 VentaDAO venta = new VentaDAO();
                 venta.setId_venta(rs.getInt("id_venta"));
                 venta.setFecha(rs.getString("fecha"));
-                venta.setTotal(rs.getFloat("total")); // Asume que existe el atributo "total" en VentaDAO
+                venta.setTotal(rs.getFloat("total"));
                 historial.add(venta);
             }
         } catch (Exception e) {

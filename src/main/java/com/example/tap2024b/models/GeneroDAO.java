@@ -82,6 +82,6 @@ public class GeneroDAO {
     }
     @Override
     public String toString() {
-        return this.genero; // Retorna el nombre del género para mostrarlo en el ComboBox
+        return this.genero;
     }
 }
